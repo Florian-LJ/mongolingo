@@ -1,0 +1,68 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "title": "User",
+    "description": "Utilisateur enregistré sur la plateforme Mongolingo",
+    "required": ["username", "email", "age", "country", "role", "score", "createdAt"],
+    "properties": {
+      "_id": {
+        "bsonType": "objectId",
+        "description": "Identifiant unique auto-généré par MongoDB"
+      },
+      "username": {
+        "bsonType": "string",
+        "minLength": 3,
+        "maxLength": 30,
+        "description": "Nom de connexion unique — obligatoire"
+      },
+      "email": {
+        "bsonType": "string",
+        "pattern": "^.+@.+\\..+$",
+        "description": "Adresse email unique — format validé par regex"
+      },
+      "age": {
+        "bsonType": "int",
+        "minimum": 13,
+        "maximum": 120,
+        "description": "Âge en années"
+      },
+      "country": {
+        "bsonType": "string",
+        "minLength": 2,
+        "maxLength": 3,
+        "description": "Code ISO pays (FR, US, DE...)"
+      },
+      "role": {
+        "bsonType": "string",
+        "enum": ["admin", "seller", "buyer"],
+        "description": "Rôle dans l'application — valeurs strictement limitées"
+      },
+      "score": {
+        "bsonType": "int",
+        "minimum": 0,
+        "maximum": 10000,
+        "description": "Score de gamification"
+      },
+      "tags": {
+        "bsonType": "array",
+        "description": "Tableau de tags d'intérêt — optionnel",
+        "items": {
+          "bsonType": "string"
+        }
+      },
+      "createdAt": {
+        "bsonType": "date",
+        "description": "Date de création du compte"
+      },
+      "address": {
+        "bsonType": "object",
+        "description": "Adresse postale imbriquée — optionnelle",
+        "properties": {
+          "street": { "bsonType": "string" },
+          "city":   { "bsonType": "string" },
+          "zip":    { "bsonType": "string" }
+        }
+      }
+    }
+  }
+}

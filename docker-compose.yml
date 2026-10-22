@@ -1,0 +1,57 @@
+services:
+
+  # ── MongoDB ──────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: mongolingo_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: mongolingo
+    volumes:
+      - mongo_data:/data/db          # persistance des données
+      - ./backup:/backup             # dossier de sauvegarde partagé
+    ports:
+      - "27017:27017"                # accès depuis l'hôte 
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend Express ───────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mongolingo_backend
+    restart: unless-stopped
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      PORT: 3001
+    volumes:
+      - ./data:/app/data             # données de démo JSON
+      - ./schemas:/app/schemas       # schémas JSON Schema
+      - ./backup:/app/backup         # sauvegarde partagée avec mongo
+    ports:
+      - "3001:3001"
+    depends_on:
+      mongo:
+        condition: service_healthy   # attend que MongoDB soit prêt
+
+  # ── Frontend Vite/React ───────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mongolingo_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:3001/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+    driver: local

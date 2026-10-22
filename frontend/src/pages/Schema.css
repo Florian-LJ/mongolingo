@@ -1,0 +1,117 @@
+.schema {
+  min-height: 100vh;
+  background: #f7f6f2;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-back-top {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+}
+
+.btn-back-top:hover { color: #333; }
+
+.topbar-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.schema-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.schema-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.schema-header {
+  background: #0d2018;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.schema-colname {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #a8ffca;
+}
+
+.schema-count {
+  font-size: 0.75rem;
+  color: #4a9060;
+}
+
+.schema-body {
+  padding: 1rem 1.25rem;
+}
+
+.schema-desc {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+
+.schema-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  font-size: 0.8rem;
+}
+
+.schema-field:last-child { border-bottom: none; }
+
+.field-nom  {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  min-width: 100px;
+  color: #1a1a1a;
+}
+
+.field-type {
+  color: #2d8cff;
+  font-weight: 600;
+  font-size: 0.73rem;
+  min-width: 75px;
+}
+
+.field-desc { color: #888; line-height: 1.4; }
+
+.schema-sample {
+  background: #0d2018;
+  color: #a8ffca;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  line-height: 1.8;
+  margin: 0;
+  white-space: pre-wrap;
+}

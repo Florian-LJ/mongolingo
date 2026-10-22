@@ -1,0 +1,202 @@
+[
+  {
+    "_id": "64af800000000000000000c1",
+    "buyerId": "64af300000000000000000a1",
+    "items": [
+      {
+        "productId": "64af500000000000000000b1",
+        "qty": 1,
+        "unitPrice": 89.99
+      },
+      {
+        "productId": "64af500000000000000000b5",
+        "qty": 1,
+        "unitPrice": 39.99
+      }
+    ],
+    "total": 129.98,
+    "status": "delivered",
+    "createdAt": "2024-03-10T00:00:00.000Z",
+    "shippedAt": "2024-03-12T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000c2",
+    "buyerId": "64af300000000000000000a4",
+    "items": [
+      {
+        "productId": "64af500000000000000000b6",
+        "qty": 2,
+        "unitPrice": 18.9
+      }
+    ],
+    "total": 37.8,
+    "status": "delivered",
+    "createdAt": "2024-03-15T00:00:00.000Z",
+    "shippedAt": "2024-03-17T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000c3",
+    "buyerId": "64af300000000000000000a5",
+    "items": [
+      {
+        "productId": "64af500000000000000000b4",
+        "qty": 1,
+        "unitPrice": 119
+      }
+    ],
+    "total": 119,
+    "status": "shipped",
+    "createdAt": "2024-04-01T00:00:00.000Z",
+    "shippedAt": "2024-04-03T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000c4",
+    "buyerId": "64af300000000000000000a6",
+    "items": [
+      {
+        "productId": "64af500000000000000000b8",
+        "qty": 1,
+        "unitPrice": 399
+      }
+    ],
+    "total": 399,
+    "status": "delivered",
+    "createdAt": "2024-03-20T00:00:00.000Z",
+    "shippedAt": "2024-03-22T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000c5",
+    "buyerId": "64af300000000000000000a1",
+    "items": [
+      {
+        "productId": "64af500000000000000000b6",
+        "qty": 3,
+        "unitPrice": 18.9
+      }
+    ],
+    "total": 56.7,
+    "status": "delivered",
+    "createdAt": "2024-02-10T00:00:00.000Z",
+    "shippedAt": "2024-02-12T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000c6",
+    "buyerId": "64af300000000000000000a7",
+    "items": [
+      {
+        "productId": "64af500000000000000000b1",
+        "qty": 1,
+        "unitPrice": 89.99
+      },
+      {
+        "productId": "64af500000000000000000ba",
+        "qty": 1,
+        "unitPrice": 49.9
+      }
+    ],
+    "total": 139.89,
+    "status": "delivered",
+    "createdAt": "2024-03-25T00:00:00.000Z",
+    "shippedAt": "2024-03-27T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000c7",
+    "buyerId": "64af300000000000000000a9",
+    "items": [
+      {
+        "productId": "64af500000000000000000b5",
+        "qty": 1,
+        "unitPrice": 39.99
+      }
+    ],
+    "total": 39.99,
+    "status": "pending",
+    "createdAt": "2024-04-05T00:00:00.000Z",
+    "shippedAt": null
+  },
+  {
+    "_id": "64af800000000000000000c8",
+    "buyerId": "64af300000000000000000a1",
+    "items": [
+      {
+        "productId": "64af500000000000000000b3",
+        "qty": 4,
+        "unitPrice": 12.5
+      }
+    ],
+    "total": 50,
+    "status": "cancelled",
+    "createdAt": "2023-11-15T00:00:00.000Z",
+    "shippedAt": null
+  },
+  {
+    "_id": "64af800000000000000000c9",
+    "buyerId": "64af300000000000000000a4",
+    "items": [
+      {
+        "productId": "64af500000000000000000b2",
+        "qty": 2,
+        "unitPrice": 24.99
+      },
+      {
+        "productId": "64af500000000000000000b5",
+        "qty": 1,
+        "unitPrice": 39.99
+      }
+    ],
+    "total": 89.97,
+    "status": "delivered",
+    "createdAt": "2024-02-20T00:00:00.000Z",
+    "shippedAt": "2024-02-22T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000ca",
+    "buyerId": "64af300000000000000000a6",
+    "items": [
+      {
+        "productId": "64af500000000000000000ba",
+        "qty": 2,
+        "unitPrice": 49.9
+      }
+    ],
+    "total": 99.8,
+    "status": "delivered",
+    "createdAt": "2024-01-28T00:00:00.000Z",
+    "shippedAt": "2024-01-30T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000cb",
+    "buyerId": "64af300000000000000000ae",
+    "items": [
+      {
+        "productId": "64af500000000000000000b9",
+        "qty": 1,
+        "unitPrice": 34.99
+      },
+      {
+        "productId": "64af500000000000000000b3",
+        "qty": 2,
+        "unitPrice": 12.5
+      }
+    ],
+    "total": 59.99,
+    "status": "delivered",
+    "createdAt": "2024-03-08T00:00:00.000Z",
+    "shippedAt": "2024-03-10T00:00:00.000Z"
+  },
+  {
+    "_id": "64af800000000000000000cc",
+    "buyerId": "64af300000000000000000a7",
+    "items": [
+      {
+        "productId": "64af500000000000000000b8",
+        "qty": 1,
+        "unitPrice": 399
+      }
+    ],
+    "total": 399,
+    "status": "cancelled",
+    "createdAt": "2023-10-10T00:00:00.000Z",
+    "shippedAt": null
+  }
+]

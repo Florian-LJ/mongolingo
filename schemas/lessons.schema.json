@@ -1,0 +1,82 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "title": "Lesson",
+    "description": "Leçon du quiz Mongolingo avec ses questions",
+    "required": ["id", "titre", "icon", "niveau", "desc", "questions"],
+    "properties": {
+      "_id": {
+        "bsonType": "objectId"
+      },
+      "id": {
+        "bsonType": "string",
+        "description": "Identifiant unique de la leçon (ex: find-basics)",
+        "minLength": 2
+      },
+      "titre": {
+        "bsonType": "string",
+        "description": "Titre affiché dans l'interface",
+        "minLength": 2
+      },
+      "icon": {
+        "bsonType": "string",
+        "description": "Emoji représentant la leçon"
+      },
+      "niveau": {
+        "bsonType": "string",
+        "description": "Niveau de difficulté",
+        "enum": ["easy", "medium", "hard", "expert"]
+      },
+      "desc": {
+        "bsonType": "string",
+        "description": "Description courte des thèmes abordés"
+      },
+      "questions": {
+        "bsonType": "array",
+        "description": "Liste des questions de la leçon",
+        "minItems": 1,
+        "items": {
+          "bsonType": "object",
+          "required": ["id", "enonce", "options", "explication"],
+          "properties": {
+            "id": {
+              "bsonType": "string",
+              "description": "Identifiant unique de la question"
+            },
+            "enonce": {
+              "bsonType": "string",
+              "description": "Texte de la question posée au joueur"
+            },
+            "options": {
+              "bsonType": "array",
+              "description": "Les 4 choix de réponse",
+              "minItems": 2,
+              "maxItems": 4,
+              "items": {
+                "bsonType": "object",
+                "required": ["code", "correct"],
+                "properties": {
+                  "code": {
+                    "bsonType": "string",
+                    "description": "Code MongoDB affiché comme option"
+                  },
+                  "correct": {
+                    "bsonType": "bool",
+                    "description": "True si c'est la bonne réponse"
+                  }
+                }
+              }
+            },
+            "explication": {
+              "bsonType": "string",
+              "description": "Explication affichée après la réponse"
+            },
+            "query": {
+              "description": "Requête structurée à exécuter sur MongoDB — null si question théorique"
+            }
+          }
+        }
+      }
+    }
+  }
+}

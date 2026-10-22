@@ -1,0 +1,58 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "title": "Product",
+    "description": "Produit mis en vente sur la plateforme",
+    "required": ["name", "category", "price", "stock", "sellerId", "createdAt"],
+    "properties": {
+      "_id": {
+        "bsonType": "objectId"
+      },
+      "name": {
+        "bsonType": "string",
+        "minLength": 2,
+        "description": "Nom du produit — obligatoire"
+      },
+      "category": {
+        "bsonType": "string",
+        "enum": ["electronics", "clothing", "food", "sport", "books", "other"],
+        "description": "Catégorie — valeurs strictement limitées"
+      },
+      "price": {
+        "bsonType": ["double", "int", "long"],
+        "minimum": 0,
+        "description": "Prix en euros — doit être positif"
+      },
+      "stock": {
+        "bsonType": "int",
+        "minimum": 0,
+        "description": "Quantité disponible — ne peut pas être négative"
+      },
+      "sellerId": {
+        "bsonType": "objectId",
+        "description": "Référence vers users._id — clé étrangère"
+      },
+      "ratings": {
+        "bsonType": "array",
+        "description": "Tableau d'avis clients — optionnel",
+        "items": {
+          "bsonType": "object",
+          "required": ["userId", "score"],
+          "properties": {
+            "userId":  { "bsonType": "objectId" },
+            "score":   { "bsonType": ["double", "int", "long"], "minimum": 0, "maximum": 5 },
+            "comment": { "bsonType": "string" }
+          }
+        }
+      },
+      "specs": {
+        "bsonType": "object",
+        "description": "Spécifications techniques — structure flexible selon la catégorie"
+      },
+      "createdAt": {
+        "bsonType": "date",
+        "description": "Date de création de l'annonce"
+      }
+    }
+  }
+}

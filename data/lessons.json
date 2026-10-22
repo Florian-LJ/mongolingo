@@ -1,0 +1,4697 @@
+[
+  {
+    "_id": "69ca471868a02a818a3ca511",
+    "id": "find-basics",
+    "titre": "Premier find()",
+    "icon": "🔍",
+    "niveau": "easy",
+    "desc": "Récupérer et filtrer des documents",
+    "questions": [
+      {
+        "id": "q1",
+        "enonce": "Comment récupérer TOUS les documents de la collection users ?",
+        "options": [
+          {
+            "code": "db.users.find({})",
+            "correct": true
+          },
+          {
+            "code": "db.users.get()",
+            "correct": false
+          },
+          {
+            "code": "db.find('users')",
+            "correct": false
+          },
+          {
+            "code": "SELECT * FROM users",
+            "correct": false
+          }
+        ],
+        "explication": "find({}) avec un filtre vide retourne tous les documents. Le {} signifie 'pas de condition'. C'est l'équivalent MongoDB de SELECT * en SQL.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q2",
+        "enonce": "Récupère uniquement les utilisateurs dont le rôle est 'admin'.",
+        "options": [
+          {
+            "code": "db.users.find({ role: \"admin\" })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ \"role == admin\" })",
+            "correct": false
+          },
+          {
+            "code": "db.users.filter({ role: \"admin\" })",
+            "correct": false
+          },
+          {
+            "code": "db.users.where({ role: \"admin\" })",
+            "correct": false
+          }
+        ],
+        "explication": "Un filtre d'égalité s'écrit simplement { champ: valeur }. filter() et where() n'existent pas en MongoDB natif.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "role": "admin"
+            }
+          ],
+          "options": {
+            "limit": 10
+          }
+        }
+      },
+      {
+        "id": "q3",
+        "enonce": "Retourne uniquement le username et l'email de tous les users, sans le champ _id.",
+        "options": [
+          {
+            "code": "db.users.find({}, { username:1, email:1, _id:0 })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({}).select(\"username email\")",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({}, { username, email })",
+            "correct": false
+          },
+          {
+            "code": "db.users.project({ username:1, email:1 })",
+            "correct": false
+          }
+        ],
+        "explication": "Le 2ème argument de find() est une projection. 1 = inclure, 0 = exclure. Par défaut _id est toujours inclus — il faut explicitement le mettre à 0 pour le cacher.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {},
+            {
+              "username": 1,
+              "email": 1,
+              "_id": 0
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q4",
+        "enonce": "Comment compter le nombre total de documents dans la collection orders ?",
+        "options": [
+          {
+            "code": "db.orders.countDocuments()",
+            "correct": true
+          },
+          {
+            "code": "db.orders.count()",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find().length()",
+            "correct": false
+          },
+          {
+            "code": "db.orders.size()",
+            "correct": false
+          }
+        ],
+        "explication": "countDocuments() est la méthode moderne et précise. count() est dépréciée. find().length() n'existe pas — find() retourne un curseur, pas un tableau.",
+        "query": {
+          "collection": "orders",
+          "operation": "countDocuments",
+          "args": [
+            {}
+          ]
+        }
+      },
+      {
+        "id": "q5",
+        "enonce": "Trouve le premier produit de la collection (un seul document).",
+        "options": [
+          {
+            "code": "db.products.findOne()",
+            "correct": true
+          },
+          {
+            "code": "db.products.find().first()",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({}).limit(1)[0]",
+            "correct": false
+          },
+          {
+            "code": "db.products.getOne()",
+            "correct": false
+          }
+        ],
+        "explication": "findOne() retourne directement un document (ou null). find().limit(1) retourne un curseur qu'il faut itérer. first() et getOne() n'existent pas.",
+        "query": {
+          "collection": "products",
+          "operation": "findOne",
+          "args": [
+            {}
+          ]
+        }
+      },
+      {
+        "id": "q6",
+        "enonce": "Récupère tous les produits de catégorie 'electronics' en affichant seulement name et price.",
+        "options": [
+          {
+            "code": "db.products.find({ category:\"electronics\" }, { name:1, price:1, _id:0 })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ category:\"electronics\" }, { name, price })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ category:\"electronics\" }).project({ name:1, price:1 })",
+            "correct": false
+          },
+          {
+            "code": "db.products.select(\"name price\").where({ category:\"electronics\" })",
+            "correct": false
+          }
+        ],
+        "explication": "On combine filtre (1er argument) et projection (2ème argument) dans le même find(). project() n'existe pas sur le curseur en shell — c'est une méthode Mongoose.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "category": "electronics"
+            },
+            {
+              "name": 1,
+              "price": 1,
+              "_id": 0
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q7",
+        "enonce": "Trouve tous les users dont l'adresse est dans la ville de 'Paris' (champ imbriqué).",
+        "options": [
+          {
+            "code": "db.users.find({ \"address.city\": \"Paris\" })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ address: { city: \"Paris\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ address.city: \"Paris\" })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ address: \"Paris\" })",
+            "correct": false
+          }
+        ],
+        "explication": "Pour accéder à un champ imbriqué, on utilise la notation pointée entre guillemets : \"address.city\". Sans guillemets, JavaScript interprète le point comme un accès de propriété et génère une erreur de syntaxe.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "address.city": "Paris"
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q8",
+        "enonce": "Récupère tous les orders en affichant seulement status et total, sans _id.",
+        "options": [
+          {
+            "code": "db.orders.find({}, { status:1, total:1, _id:0 })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({}, { status:1, total:1 })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({}, { -_id, status, total })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({}).hide(\"_id\")",
+            "correct": false
+          }
+        ],
+        "explication": "Sans _id:0, MongoDB inclut toujours _id dans la projection même si on ne le demande pas. hide() n'existe pas. La syntaxe { -_id } est invalide en JSON.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {},
+            {
+              "status": 1,
+              "total": 1,
+              "_id": 0
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q9",
+        "enonce": "Comment vérifier si un champ 'shippedAt' existe dans les documents orders ?",
+        "options": [
+          {
+            "code": "db.orders.find({ shippedAt: { $exists: true } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ shippedAt: { $notNull: true } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ shippedAt != null })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ shippedAt: { $defined: true } })",
+            "correct": false
+          }
+        ],
+        "explication": "$exists: true retourne les documents où le champ existe (même s'il vaut null). $notNull et $defined n'existent pas. La syntaxe != n'est pas du JSON valide.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "shippedAt": {
+                "$exists": true
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q10",
+        "enonce": "Récupère tous les users qui ont le tag 'gaming' dans leur tableau tags.",
+        "options": [
+          {
+            "code": "db.users.find({ tags: \"gaming\" })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ tags: { $contains: \"gaming\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ tags: [\"gaming\"] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ tags: { $has: \"gaming\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "En MongoDB, filtrer { tags: \"gaming\" } sur un tableau vérifie si la valeur est présente dans le tableau. Pas besoin d'opérateur spécial pour une correspondance simple. $contains et $has n'existent pas. { tags: [\"gaming\"] } chercherait un tableau exact avec uniquement 'gaming'.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "tags": "gaming"
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca512",
+    "id": "comparaisons",
+    "titre": "Comparaisons",
+    "icon": "⚖️",
+    "niveau": "easy",
+    "desc": "$gt, $lt, $in, $ne, $exists...",
+    "questions": [
+      {
+        "id": "q11",
+        "enonce": "Trouve tous les utilisateurs de plus de 30 ans.",
+        "options": [
+          {
+            "code": "db.users.find({ age: { $gt: 30 } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ age > 30 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ age: { $gte: 30 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ age: \">30\" })",
+            "correct": false
+          }
+        ],
+        "explication": "$gt signifie 'strictly greater than'. $gte c'est >= qui inclurait les 30 ans. Les opérateurs MongoDB commencent toujours par $.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "age": {
+                "$gt": 30
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q12",
+        "enonce": "Trouve les produits avec un prix entre 10 et 50 inclus.",
+        "options": [
+          {
+            "code": "db.products.find({ price: { $gte:10, $lte:50 } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ price: { $between: [10, 50] } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ price: [10, 50] })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ 10 <= price && price <= 50 })",
+            "correct": false
+          }
+        ],
+        "explication": "On combine $gte et $lte sur le même champ. $between n'existe pas en MongoDB.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "price": {
+                "$gte": 10,
+                "$lte": 50
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q13",
+        "enonce": "Trouve tous les users venant de France (FR), d'Allemagne (DE) ou d'Espagne (ES).",
+        "options": [
+          {
+            "code": "db.users.find({ country: { $in: [\"FR\",\"DE\",\"ES\"] } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ country: [\"FR\",\"DE\",\"ES\"] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $or: [{country:\"FR\"},{country:\"DE\"},{country:\"ES\"}] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ country: { $contains: [\"FR\",\"DE\",\"ES\"] } })",
+            "correct": false
+          }
+        ],
+        "explication": "$in vérifie si la valeur est dans un tableau. Plus concis que trois $or. $contains n'existe pas.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "country": {
+                "$in": [
+                  "FR",
+                  "DE",
+                  "ES"
+                ]
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q14",
+        "enonce": "Trouve tous les users dont le rôle n'est PAS 'admin'.",
+        "options": [
+          {
+            "code": "db.users.find({ role: { $ne: \"admin\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ role: { $not: \"admin\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ role: { $nin: \"admin\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ !role: \"admin\" })",
+            "correct": false
+          }
+        ],
+        "explication": "$ne signifie 'not equal'. $not s'applique à une expression, pas une valeur directe. $nin s'utilise avec un tableau. La syntaxe !role est invalide.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "role": {
+                "$ne": "admin"
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q15",
+        "enonce": "Trouve les produits dont le stock est exactement à 0.",
+        "options": [
+          {
+            "code": "db.products.find({ stock: 0 })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ stock: { $eq: 0 } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ stock: { $zero: true } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ stock: null })",
+            "correct": false
+          }
+        ],
+        "explication": "L'égalité s'écrit directement { champ: valeur } sans opérateur. $eq existe mais est redondant ici. $zero n'existe pas. null rechercherait les documents où stock est null ou absent.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "stock": 0
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q16",
+        "enonce": "Trouve les users dont le pays n'est PAS dans la liste [FR, DE, ES].",
+        "options": [
+          {
+            "code": "db.users.find({ country: { $nin: [\"FR\",\"DE\",\"ES\"] } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ country: { $not: [\"FR\",\"DE\",\"ES\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ country: { $notIn: [\"FR\",\"DE\",\"ES\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $nor: [{ country: \"FR\" },{ country: \"DE\" },{ country: \"ES\" }] })",
+            "correct": false
+          }
+        ],
+        "explication": "$nin (not in) est l'opposé de $in. $notIn n'existe pas. $nor fonctionnerait aussi mais $nin est plus concis et idiomatique.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "country": {
+                "$nin": [
+                  "FR",
+                  "DE",
+                  "ES"
+                ]
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q17",
+        "enonce": "Trouve les orders dont le champ shippedAt est null (commandes non expédiées).",
+        "options": [
+          {
+            "code": "db.orders.find({ shippedAt: null })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ shippedAt: { $exists: false } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ shippedAt: { $isNull: true } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ shippedAt: undefined })",
+            "correct": false
+          }
+        ],
+        "explication": "{ shippedAt: null } matche les documents où shippedAt est null OU absent. $exists: false trouverait les documents où le champ n'existe pas du tout. $isNull n'existe pas.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "shippedAt": null
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q18",
+        "enonce": "Trouve les users avec un score supérieur ou égal à 1000 ET inférieur à 5000.",
+        "options": [
+          {
+            "code": "db.users.find({ score: { $gte: 1000, $lt: 5000 } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ score: { $between: [1000, 5000] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $and: [{ score: { $gte: 1000 } }, { score: { $lt: 5000 } }] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ score: [1000, 5000] })",
+            "correct": false
+          }
+        ],
+        "explication": "Combiner $gte et $lt sur le même champ est la façon la plus concise. L'option C avec $and fonctionnerait aussi mais est moins idiomatique pour des conditions sur le même champ.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "score": {
+                "$gte": 1000,
+                "$lt": 5000
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q19",
+        "enonce": "Trouve les produits dont le nom commence par 'M' (sensible à la casse).",
+        "options": [
+          {
+            "code": "db.products.find({ name: { $regex: /^M/ } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ name: { $startsWith: \"M\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ name: { $like: \"M%\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ name: /M/ })",
+            "correct": false
+          }
+        ],
+        "explication": "$regex permet les expressions régulières. /^M/ signifie 'commence par M'. $startsWith et $like n'existent pas. /M/ sans ^ trouverait les noms contenant M n'importe où.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "name": {
+                "$regex": "^M"
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q20",
+        "enonce": "Trouve tous les orders avec un total supérieur à 100.",
+        "options": [
+          {
+            "code": "db.orders.find({ total: { $gt: 100 } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ total > 100 })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ total: { $greaterThan: 100 } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ \"total\": \"> 100\" })",
+            "correct": false
+          }
+        ],
+        "explication": "$gt est l'opérateur 'greater than'. $greaterThan n'existe pas — MongoDB utilise des abréviations ($gt, $lt, $gte, $lte). La valeur doit être un nombre, pas une string.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "total": {
+                "$gt": 100
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca513",
+    "id": "logique",
+    "titre": "Opérateurs logiques",
+    "icon": "🧮",
+    "niveau": "easy",
+    "desc": "$and, $or, $not, $nor",
+    "questions": [
+      {
+        "id": "q21",
+        "enonce": "Trouve les users qui sont 'buyer' ET ont un score supérieur à 1000.",
+        "options": [
+          {
+            "code": "db.users.find({ role:\"buyer\", score:{ $gt:1000 } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ $and: [{ role:\"buyer\" },{ score:{ $gt:1000 } }] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ role:\"buyer\" && score > 1000 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ role:\"buyer\" }).and({ score:{ $gt:1000 } })",
+            "correct": false
+          }
+        ],
+        "explication": "Plusieurs conditions dans le même objet = AND implicite. $and explicite fonctionne aussi mais n'est nécessaire que pour deux conditions sur le MÊME champ.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "role": "buyer",
+              "score": {
+                "$gt": 1000
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q22",
+        "enonce": "Trouve les produits en rupture de stock (stock: 0) OU de catégorie 'food'.",
+        "options": [
+          {
+            "code": "db.products.find({ $or: [{ stock:0 }, { category:\"food\" }] })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ stock:0, category:\"food\" })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ stock:0 || category:\"food\" })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ $or: { stock:0, category:\"food\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$or prend un TABLEAU de conditions. L'option D est fausse car $or attend un tableau []. L'option B serait un AND.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "$or": [
+                {
+                  "stock": 0
+                },
+                {
+                  "category": "food"
+                }
+              ]
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q23",
+        "enonce": "Trouve les orders qui NE sont PAS en statut 'delivered'.",
+        "options": [
+          {
+            "code": "db.orders.find({ status: { $not: { $eq: \"delivered\" } } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ status: { $ne: \"delivered\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ $not: { status: \"delivered\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ status: { $notEq: \"delivered\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$not s'applique à une expression de requête. Ici $not: { $eq: 'delivered' } est correct. $ne est plus simple et également correct (option B marche aussi). $not au niveau racine du filtre est invalide. $notEq n'existe pas.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "status": {
+                "$ne": "delivered"
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q24",
+        "enonce": "Trouve les users qui ne sont NI admin, NI seller.",
+        "options": [
+          {
+            "code": "db.users.find({ $nor: [{ role:\"admin\" }, { role:\"seller\" }] })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ role: { $nin: [\"admin\",\"seller\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $not: [{ role:\"admin\" }, { role:\"seller\" }] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ role: { $ne: \"admin\", $ne: \"seller\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$nor retourne les documents qui ne satisfont AUCUNE des conditions. L'option B avec $nin est aussi correcte et plus concise pour ce cas. L'option D est invalide car on ne peut pas avoir deux fois la même clé dans un objet.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "$nor": [
+                {
+                  "role": "admin"
+                },
+                {
+                  "role": "seller"
+                }
+              ]
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q25",
+        "enonce": "Trouve les users de France avec un score > 500 OU les users d'Allemagne avec un score > 1000.",
+        "options": [
+          {
+            "code": "db.users.find({ $or: [{ country:\"FR\", score:{ $gt:500 } }, { country:\"DE\", score:{ $gt:1000 } }] })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ country:\"FR\", score:{ $gt:500 }, country:\"DE\", score:{ $gt:1000 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ country: { $in:[\"FR\",\"DE\"] }, score: { $gt: 500 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $and: [{ country:\"FR\" }, { score:{ $gt:500 } }, { country:\"DE\" }, { score:{ $gt:1000 } }] })",
+            "correct": false
+          }
+        ],
+        "explication": "On imbrique les conditions : chaque élément du $or contient lui-même plusieurs conditions (AND implicite). L'option C ne distingue pas les seuils différents par pays.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "$or": [
+                {
+                  "country": "FR",
+                  "score": {
+                    "$gt": 500
+                  }
+                },
+                {
+                  "country": "DE",
+                  "score": {
+                    "$gt": 1000
+                  }
+                }
+              ]
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q26",
+        "enonce": "Trouve les products qui ont un stock > 0 ET un prix < 100.",
+        "options": [
+          {
+            "code": "db.products.find({ stock: { $gt: 0 }, price: { $lt: 100 } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ $and: [{ stock: { $gt: 0 } }, { price: { $lt: 100 } }] })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ stock && price: { $gt: 0, $lt: 100 } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ stock: { $gt: 0 } }).find({ price: { $lt: 100 } })",
+            "correct": false
+          }
+        ],
+        "explication": "AND implicite en mettant les deux conditions dans le même objet. L'option B avec $and explicite marche aussi mais est plus verbeuse. On ne peut pas chaîner deux find().",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "stock": {
+                "$gt": 0
+              },
+              "price": {
+                "$lt": 100
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q27",
+        "enonce": "Trouve les orders dont le statut est 'pending' OU 'shipped' ET le total est supérieur à 50.",
+        "options": [
+          {
+            "code": "db.orders.find({ $or: [{ status:\"pending\" }, { status:\"shipped\" }], total: { $gt: 50 } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ status: { $in:[\"pending\",\"shipped\"] }, total: { $gt: 50 } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ $or: [{ status:\"pending\", total:{ $gt:50 } }, { status:\"shipped\", total:{ $gt:50 } }] })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ status: \"pending\" || \"shipped\", total: { $gt: 50 } })",
+            "correct": false
+          }
+        ],
+        "explication": "Le $or et la condition total coexistent au même niveau — MongoDB les combine avec un AND implicite. L'option B avec $in est équivalente et plus concise. L'option C est correcte mais redondante.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "$or": [
+                {
+                  "status": "pending"
+                },
+                {
+                  "status": "shipped"
+                }
+              ],
+              "total": {
+                "$gt": 50
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q28",
+        "enonce": "Trouve les users qui ont un score entre 500 et 2000 MAIS qui ne sont pas de France.",
+        "options": [
+          {
+            "code": "db.users.find({ score: { $gte:500, $lte:2000 }, country: { $ne: \"FR\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ score: { $gte:500, $lte:2000 }, $not: { country: \"FR\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $and: [{ score: { $gte:500 } }, { score: { $lte:2000 } }], $not: { country:\"FR\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ score: [500, 2000], country: !\"FR\" })",
+            "correct": false
+          }
+        ],
+        "explication": "On combine les conditions sur score avec $gte/$lte et la négation sur country avec $ne. $not au niveau racine du filtre ne fonctionne pas — il s'applique à un opérateur, pas un champ directement.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "score": {
+                "$gte": 500,
+                "$lte": 2000
+              },
+              "country": {
+                "$ne": "FR"
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q29",
+        "enonce": "Trouve les products qui ont à la fois le tag 'gaming' ET sont de catégorie 'electronics'.",
+        "options": [
+          {
+            "code": "db.products.find({ category: \"electronics\" })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ $and: [{ category:\"electronics\" }] })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ category: \"electronics\", tags: { $all: [\"gaming\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ category: \"electronics\", tags: \"gaming\" })",
+            "correct": false
+          }
+        ],
+        "explication": "Les products n'ont pas de champ tags — seuls les users en ont. La bonne requête cherche uniquement par category. Dans un vrai cas avec tags, l'option D serait correcte pour chercher 'gaming' dans le tableau.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "category": "electronics"
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q30",
+        "enonce": "Trouve les users qui ont SOIT le rôle 'admin', SOIT un score supérieur à 5000.",
+        "options": [
+          {
+            "code": "db.users.find({ $or: [{ role:\"admin\" }, { score:{ $gt:5000 } }] })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ role:\"admin\", score:{ $gt:5000 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $and: [{ role:\"admin\" }, { score:{ $gt:5000 } }] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ role:\"admin\" || score:{ $gt:5000 } })",
+            "correct": false
+          }
+        ],
+        "explication": "$or retourne les documents satisfaisant AU MOINS UNE condition. L'option B est un AND — elle retournerait uniquement les admins avec score > 5000. || en JavaScript n'est pas valide dans un filtre MongoDB.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "$or": [
+                {
+                  "role": "admin"
+                },
+                {
+                  "score": {
+                    "$gt": 5000
+                  }
+                }
+              ]
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca514",
+    "id": "sort-limit",
+    "titre": "Tri & Pagination",
+    "icon": "📊",
+    "niveau": "medium",
+    "desc": "sort(), limit(), skip()",
+    "questions": [
+      {
+        "id": "q31",
+        "enonce": "Retourne les 5 users avec le score le plus élevé (username et score uniquement).",
+        "options": [
+          {
+            "code": "db.users.find({},{ username:1,score:1,_id:0 }).sort({ score:-1 }).limit(5)",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({}).limit(5).sort({ score:-1 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.sort({ score:-1 }).find({}).limit(5)",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({},{ username:1,score:1 }).top(5)",
+            "correct": false
+          }
+        ],
+        "explication": "sort(-1) = décroissant. top() n'existe pas. L'ordre correct sur le curseur est : find() → sort() → skip() → limit().",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {},
+            {
+              "username": 1,
+              "score": 1,
+              "_id": 0
+            }
+          ],
+          "options": {
+            "sort": {
+              "score": -1
+            },
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q32",
+        "enonce": "Implémente la page 2 de résultats, 10 users par page, triés alphabétiquement.",
+        "options": [
+          {
+            "code": "db.users.find({}).sort({ username:1 }).skip(10).limit(10)",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({}).sort({ username:1 }).skip(20).limit(10)",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({}).skip(10).limit(10)",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({}).sort({ username:1 }).page(2).size(10)",
+            "correct": false
+          }
+        ],
+        "explication": "Page N avec taille P : skip((N-1)*P). Page 2 = skip(10). Sans sort(), la pagination est instable.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "username": 1
+            },
+            "skip": 10,
+            "limit": 10
+          }
+        }
+      },
+      {
+        "id": "q33",
+        "enonce": "Trie les produits par prix croissant.",
+        "options": [
+          {
+            "code": "db.products.find({}).sort({ price: 1 })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({}).sort({ price: \"asc\" })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({}).orderBy({ price: 1 })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({}).sort(\"price\")",
+            "correct": false
+          }
+        ],
+        "explication": "1 = ordre croissant (ascending), -1 = décroissant. MongoDB n'accepte pas 'asc'/'desc' comme valeurs. orderBy() n'existe pas.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "price": 1
+            },
+            "limit": 10
+          }
+        }
+      },
+      {
+        "id": "q34",
+        "enonce": "Retourne les 3 commandes les plus récentes.",
+        "options": [
+          {
+            "code": "db.orders.find({}).sort({ createdAt: -1 }).limit(3)",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({}).sort({ createdAt: 1 }).limit(3)",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({}).limit(3).sort({ createdAt: -1 })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({}).sort({ createdAt: \"desc\" }).limit(3)",
+            "correct": false
+          }
+        ],
+        "explication": "Pour les plus récentes, on trie par date décroissante (-1). sort(1) donnerait les plus anciennes. 'desc' n'est pas une valeur valide.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "createdAt": -1
+            },
+            "limit": 3
+          }
+        }
+      },
+      {
+        "id": "q35",
+        "enonce": "Retourne les produits triés par catégorie puis par prix croissant au sein de chaque catégorie.",
+        "options": [
+          {
+            "code": "db.products.find({}).sort({ category: 1, price: 1 })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({}).sort({ category: 1 }).sort({ price: 1 })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({}).sort([ [\"category\",1], [\"price\",1] ])",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({}).sort({ category: 1 }).thenBy({ price: 1 })",
+            "correct": false
+          }
+        ],
+        "explication": "Un tri multi-champs s'écrit avec un seul objet contenant tous les champs. Chaîner deux .sort() ne fonctionne pas — le deuxième écrase le premier. thenBy() n'existe pas.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "category": 1,
+              "price": 1
+            },
+            "limit": 10
+          }
+        }
+      },
+      {
+        "id": "q36",
+        "enonce": "Saute les 5 premiers users et retourne les 5 suivants, triés par username.",
+        "options": [
+          {
+            "code": "db.users.find({}).sort({ username:1 }).skip(5).limit(5)",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({}).sort({ username:1 }).limit(5).skip(5)",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({}).skip(5).sort({ username:1 }).limit(5)",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({}).sort({ username:1 }).offset(5).limit(5)",
+            "correct": false
+          }
+        ],
+        "explication": "L'ordre correct est sort() → skip() → limit(). offset() n'existe pas en MongoDB. MongoDB réordonne en interne les opérations sur le curseur, mais il est bon de les écrire dans l'ordre logique.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "username": 1
+            },
+            "skip": 5,
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q37",
+        "enonce": "Retourne le produit le moins cher.",
+        "options": [
+          {
+            "code": "db.products.findOne({}, {}, { sort: { price: 1 } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({}).sort({ price: 1 }).limit(1)[0]",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({}).sort({ price: 1 }).first()",
+            "correct": false
+          },
+          {
+            "code": "db.products.findOne({ price: { $min: true } })",
+            "correct": false
+          }
+        ],
+        "explication": "findOne() accepte un 3ème argument d'options avec sort. first() n'existe pas sur un curseur. [0] n'existe pas sur un curseur. $min dans un filtre n'a pas ce sens.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "price": 1
+            },
+            "limit": 1
+          }
+        }
+      },
+      {
+        "id": "q38",
+        "enonce": "Combien y a-t-il de produits en stock (stock > 0) ?",
+        "options": [
+          {
+            "code": "db.products.countDocuments({ stock: { $gt: 0 } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ stock: { $gt: 0 } }).count()",
+            "correct": false
+          },
+          {
+            "code": "db.products.count({ stock: { $gt: 0 } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ stock: { $gt: 0 } }).length",
+            "correct": false
+          }
+        ],
+        "explication": "countDocuments() est la méthode recommandée avec un filtre. count() et cursor.count() sont dépréciées. length n'est pas une propriété du curseur.",
+        "query": {
+          "collection": "products",
+          "operation": "countDocuments",
+          "args": [
+            {
+              "stock": {
+                "$gt": 0
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q39",
+        "enonce": "Retourne les orders 'delivered', triées du plus récent au plus ancien, page 2 (5 par page).",
+        "options": [
+          {
+            "code": "db.orders.find({ status:\"delivered\" }).sort({ createdAt:-1 }).skip(5).limit(5)",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ status:\"delivered\" }).sort({ createdAt:-1 }).skip(10).limit(5)",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ status:\"delivered\" }).skip(5).limit(5).sort({ createdAt:-1 })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ status:\"delivered\" }).sort({ createdAt:-1 }).page(2)",
+            "correct": false
+          }
+        ],
+        "explication": "Page 2 avec 5 par page = skip(5). page() n'existe pas. L'ordre des méthodes doit être sort → skip → limit.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "status": "delivered"
+            }
+          ],
+          "options": {
+            "sort": {
+              "createdAt": -1
+            },
+            "skip": 5,
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q40",
+        "enonce": "Retourne les 3 users avec le score le plus bas.",
+        "options": [
+          {
+            "code": "db.users.find({}).sort({ score: 1 }).limit(3)",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({}).sort({ score: -1 }).limit(3)",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({}).sort({ score: 1 }).skip(-3)",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({}).limit(3).sort({ score: 1 })",
+            "correct": false
+          }
+        ],
+        "explication": "sort(1) trie par ordre croissant — les scores les plus bas en premier. skip(-3) est invalide. Même si MongoDB réordonne certaines opérations, il est préférable d'écrire sort avant limit.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "score": 1
+            },
+            "limit": 3
+          }
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca515",
+    "id": "update-ops",
+    "titre": "Mise à jour",
+    "icon": "✏️",
+    "niveau": "medium",
+    "desc": "$set, $inc, $push, $addToSet, $pull, $unset",
+    "questions": [
+      {
+        "id": "q41",
+        "enonce": "Incrémente le score de alice42 de 50 points.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $inc: { score: 50 } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { score: score+50 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.update({ username:\"alice42\" }, { score: 50 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $set: { score: 50 } })",
+            "correct": false
+          }
+        ],
+        "explication": "$inc incrémente atomiquement. L'option C remplacerait tout le document. $set écrase avec 50, pas ajoute 50.",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "alice42"
+            },
+            {
+              "$inc": {
+                "score": 50
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q42",
+        "enonce": "Ajoute le tag 'premium' à alice42 sans créer de doublon.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $addToSet: { tags:\"premium\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $push: { tags:\"premium\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $set: { tags:\"premium\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $append: { tags:\"premium\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$addToSet ajoute uniquement si absent. $push ajoute toujours. $set remplacerait le tableau. $append n'existe pas.",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "alice42"
+            },
+            {
+              "$addToSet": {
+                "tags": "premium"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q43",
+        "enonce": "Supprime toutes les commandes annulées avant le 1er janvier 2024.",
+        "options": [
+          {
+            "code": "db.orders.deleteMany({ status:\"cancelled\", createdAt:{ $lt: new Date(\"2024-01-01\") } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.remove({ status:\"cancelled\" })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.deleteOne({ status:\"cancelled\" })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.drop({ status:\"cancelled\" })",
+            "correct": false
+          }
+        ],
+        "explication": "deleteMany() supprime tous les correspondants. deleteOne() ne supprime que le premier. drop() supprime la collection entière. remove() est déprécié.",
+        "query": {
+          "collection": "orders",
+          "operation": "deleteMany",
+          "args": [
+            {
+              "status": "cancelled",
+              "createdAt": {
+                "$lt": {
+                  "$date": "2024-01-01"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q44",
+        "enonce": "Met à jour le pays de alice42 vers 'DE' sans toucher aux autres champs.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $set: { country: \"DE\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { country: \"DE\" })",
+            "correct": false
+          },
+          {
+            "code": "db.users.replaceOne({ username:\"alice42\" }, { country: \"DE\" })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $update: { country: \"DE\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$set modifie uniquement les champs spécifiés. Sans opérateur, le document entier serait remplacé par { country: 'DE' }. replaceOne() remplace tout le document. $update n'existe pas.",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "alice42"
+            },
+            {
+              "$set": {
+                "country": "DE"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q45",
+        "enonce": "Retire le tag 'gaming' du tableau tags de alice42.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $pull: { tags: \"gaming\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $pop: { tags: \"gaming\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $remove: { tags: \"gaming\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $delete: { tags: \"gaming\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$pull retire d'un tableau tous les éléments correspondant à la valeur ou condition. $pop retire le premier ou dernier élément (pas par valeur). $remove et $delete n'existent pas.",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "alice42"
+            },
+            {
+              "$pull": {
+                "tags": "gaming"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q46",
+        "enonce": "Supprime le champ 'address' de alice42.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $unset: { address: \"\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $set: { address: null } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $delete: { address: 1 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $remove: \"address\" })",
+            "correct": false
+          }
+        ],
+        "explication": "$unset supprime complètement un champ. La valeur associée (ici \"\") est ignorée — mettre n'importe quoi. $set: null garde le champ avec la valeur null. $delete et $remove n'existent pas.",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "alice42"
+            },
+            {
+              "$unset": {
+                "address": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q47",
+        "enonce": "Ajoute plusieurs tags en une seule opération : ['vip', 'early-adopter'] à alice42.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $addToSet: { tags: { $each: [\"vip\",\"early-adopter\"] } } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $addToSet: { tags: [\"vip\",\"early-adopter\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $push: { tags: [\"vip\",\"early-adopter\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $pushAll: { tags: [\"vip\",\"early-adopter\"] } })",
+            "correct": false
+          }
+        ],
+        "explication": "$each permet d'ajouter plusieurs éléments avec $addToSet ou $push. Sans $each, le tableau entier serait ajouté comme un seul élément imbriqué. $pushAll est déprécié.",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "alice42"
+            },
+            {
+              "$addToSet": {
+                "tags": {
+                  "$each": [
+                    "vip",
+                    "early-adopter"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q48",
+        "enonce": "Augmente de 20 le score de tous les users de rôle 'buyer'.",
+        "options": [
+          {
+            "code": "db.users.updateMany({ role:\"buyer\" }, { $inc: { score: 20 } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateMany({ role:\"buyer\" }, { $set: { score: 20 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ role:\"buyer\" }, { $inc: { score: 20 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateMany({ role:\"buyer\" }, { $mul: { score: 2 } })",
+            "correct": false
+          }
+        ],
+        "explication": "updateMany avec $inc modifie toutes les entrées matching le filtre sans remplacer les documents, ce qui est adapté pour l'opération de bump de score.",
+        "query": {
+          "collection": "users",
+          "operation": "updateMany",
+          "args": [
+            {
+              "role": "buyer"
+            },
+            {
+              "$inc": {
+                "score": 20
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q49",
+        "enonce": "Crée un user si son username 'newuser' n'existe pas, sinon met à jour son score.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"newuser\" }, { $set: { score: 0 } }, { upsert: true })",
+            "correct": true
+          },
+          {
+            "code": "db.users.insertOrUpdate({ username:\"newuser\" }, { score: 0 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"newuser\" }, { $set: { score: 0 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.save({ username:\"newuser\", score: 0 })",
+            "correct": false
+          }
+        ],
+        "explication": "upsert: true crée le document s'il n'existe pas, le met à jour sinon. C'est un 3ème argument d'options. insertOrUpdate() n'existe pas. save() est déprécié.",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "newuser42"
+            },
+            {
+              "$set": {
+                "score": 0
+              },
+              "$setOnInsert": {
+                "email": "newuser42@example.com",
+                "age": 18,
+                "country": "FR",
+                "role": "buyer",
+                "createdAt": {
+                  "$date": "2026-01-01T00:00:00.000Z"
+                },
+                "address": {
+                  "street": "1 rue Exemple",
+                  "city": "Paris",
+                  "zip": "75001"
+                }
+              }
+            },
+            {
+              "upsert": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "q50",
+        "enonce": "Renomme le champ 'username' en 'login' pour alice42.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $rename: { username: \"login\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $set: { login: \"alice42\" }, $unset: { username: \"\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $move: { username: \"login\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $set: { \"login\": \"$username\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$rename renomme atomiquement un champ. L'option B avec $set + $unset fonctionnerait aussi mais est moins atomique et plus verbeuse. $move n'existe pas.",
+        "query": {
+          "collection": "users",
+          "operation": "findOne",
+          "args": [
+            {
+              "username": "alice42"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca516",
+    "id": "tableaux",
+    "titre": "Requêtes sur tableaux",
+    "icon": "📦",
+    "niveau": "medium",
+    "desc": "$elemMatch, $size, $all, $push avec $each",
+    "questions": [
+      {
+        "id": "q51",
+        "enonce": "Trouve les produits avec AU MOINS UNE note (rating) supérieure à 4.",
+        "options": [
+          {
+            "code": "db.products.find({ ratings: { $elemMatch: { score: { $gt: 4 } } } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ \"ratings.score\": { $gt: 4 } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ ratings: { score: { $gt: 4 } } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ ratings: { $gt: { score: 4 } } })",
+            "correct": false
+          }
+        ],
+        "explication": "$elemMatch vérifie qu'un seul élément satisfait TOUTES les conditions. La notation pointée fonctionne pour une seule condition mais $elemMatch est indispensable pour plusieurs conditions sur le même élément.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "ratings": {
+                "$elemMatch": {
+                  "score": {
+                    "$gt": 4
+                  }
+                }
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q52",
+        "enonce": "Trouve les users qui ont EXACTEMENT 2 tags.",
+        "options": [
+          {
+            "code": "db.users.find({ tags: { $size: 2 } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ tags.length: 2 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ tags: { $length: 2 } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $where: \"this.tags.length == 2\" })",
+            "correct": false
+          }
+        ],
+        "explication": "$size vérifie la taille exacte d'un tableau. tags.length n'est pas une syntaxe MongoDB valide. $length n'existe pas. $where fonctionne mais est déconseillé (lent, non indexable).",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "tags": {
+                "$size": 2
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q53",
+        "enonce": "Trouve les users qui ont TOUS ces tags : 'tech' ET 'gaming'.",
+        "options": [
+          {
+            "code": "db.users.find({ tags: { $all: [\"tech\", \"gaming\"] } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ tags: [\"tech\", \"gaming\"] })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ tags: \"tech\", tags: \"gaming\" })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ $and: [{ tags:\"tech\" }, { tags:\"gaming\" }] })",
+            "correct": false
+          }
+        ],
+        "explication": "$all vérifie que tous les éléments du tableau donné sont présents. { tags: ['tech','gaming'] } chercherait un tableau exact dans cet ordre. L'option C est invalide (clé dupliquée). L'option D fonctionnerait aussi mais $all est plus concis.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "tags": {
+                "$all": [
+                  "tech",
+                  "gaming"
+                ]
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q54",
+        "enonce": "Trouve les products avec une note (rating) dont le score est entre 3 et 5 ET un comment non vide.",
+        "options": [
+          {
+            "code": "db.products.find({ ratings: { $elemMatch: { score: { $gte:3, $lte:5 }, comment: { $exists: true } } } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.find({ \"ratings.score\": { $gte:3, $lte:5 }, \"ratings.comment\": { $exists: true } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ ratings: { score: { $gte:3 }, comment: { $exists: true } } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.find({ ratings: { $all: [{ score: { $gte:3 } }, { comment: { $exists: true } }] } })",
+            "correct": false
+          }
+        ],
+        "explication": "$elemMatch est ici indispensable car on veut que les deux conditions (score ET comment) soient satisfaites par le MÊME élément du tableau. La notation pointée ne garantit pas que ce sont les mêmes éléments.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {
+              "ratings": {
+                "$elemMatch": {
+                  "score": {
+                    "$gte": 3,
+                    "$lte": 5
+                  },
+                  "comment": {
+                    "$exists": true
+                  }
+                }
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q55",
+        "enonce": "Ajoute la note { userId: ObjectId(...), score: 5, comment: 'Top!' } dans le tableau ratings du premier produit.",
+        "options": [
+          {
+            "code": "db.products.updateOne({ name:\"Mechanical Keyboard\" }, { $push: { ratings: { score: 5, comment: \"Top!\" } } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.updateOne({ name:\"Mechanical Keyboard\" }, { $addToSet: { ratings: { score: 5, comment: \"Top!\" } } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.updateOne({ name:\"Mechanical Keyboard\" }, { $append: { ratings: { score: 5, comment: \"Top!\" } } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.updateOne({ name:\"Mechanical Keyboard\" }, { $insert: { ratings: { score: 5, comment: \"Top!\" } } })",
+            "correct": false
+          }
+        ],
+        "explication": "$push ajoute un élément à un tableau. $addToSet serait problématique ici car la comparaison d'égalité sur des objets est stricte — une note identique serait dupliquée de toute façon si un champ diffère. $append et $insert n'existent pas.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "sort": {
+              "name": 1
+            },
+            "limit": 3
+          }
+        }
+      },
+      {
+        "id": "q56",
+        "enonce": "Retire toutes les notes avec un score inférieur à 4 du tableau ratings.",
+        "options": [
+          {
+            "code": "db.products.updateMany({}, { $pull: { ratings: { score: { $lt: 4 } } } })",
+            "correct": true
+          },
+          {
+            "code": "db.products.updateMany({}, { $pull: { ratings: { score: { $lt: 2 } } } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.updateMany({}, { $pop: { ratings: -1 } })",
+            "correct": false
+          },
+          {
+            "code": "db.products.updateMany({}, { $set: { ratings: [] } })",
+            "correct": false
+          }
+        ],
+        "explication": "Pour avoir un impact visible dans les données actuelles, on retire les ratings <4 (il y a plusieurs matches). $pull avec $lt:4 supprime ces entrées.",
+        "query": {
+          "collection": "products",
+          "operation": "updateMany",
+          "args": [
+            {},
+            {
+              "$pull": {
+                "ratings": {
+                  "score": {
+                    "$lt": 4
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q57",
+        "enonce": "Trouve les users dont le tableau tags contient au moins un élément.",
+        "options": [
+          {
+            "code": "db.users.find({ tags: { $exists: true, $not: { $size: 0 } } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ tags: { $size: { $gt: 0 } } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ tags: { $gt: [] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.find({ tags: { $notEmpty: true } })",
+            "correct": false
+          }
+        ],
+        "explication": "$size ne supporte pas les opérateurs de comparaison — on ne peut pas écrire $size: { $gt: 0 }. La solution correcte vérifie que le champ existe ET n'est pas de taille 0. $notEmpty n'existe pas.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "tags": {
+                "$exists": true,
+                "$not": {
+                  "$size": 0
+                }
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q58",
+        "enonce": "Trouve les orders dont les items contiennent un produit avec qty supérieure à 2.",
+        "options": [
+          {
+            "code": "db.orders.find({ items: { $elemMatch: { qty: { $gt: 2 } } } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ \"items.qty\": { $gt: 2 } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ items: { qty: { $gt: 2 } } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ items: { $contains: { qty: { $gt: 2 } } } })",
+            "correct": false
+          }
+        ],
+        "explication": "$elemMatch vérifie qu'au moins un élément du tableau items satisfait la condition. La notation pointée fonctionne pour une seule condition simple. $contains n'existe pas.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "items": {
+                "$elemMatch": {
+                  "qty": {
+                    "$gt": 2
+                  }
+                }
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q59",
+        "enonce": "Ajoute plusieurs éléments à un tableau en une seule opération $push.",
+        "options": [
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $push: { tags: { $each: [\"music\",\"art\"] } } })",
+            "correct": true
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $push: { tags: [\"music\",\"art\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $pushAll: { tags: [\"music\",\"art\"] } })",
+            "correct": false
+          },
+          {
+            "code": "db.users.updateOne({ username:\"alice42\" }, { $push: { tags: \"music\" }, $push: { tags: \"art\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "$each avec $push ajoute plusieurs éléments en une opération. Sans $each, le tableau entier serait ajouté comme un seul élément imbriqué. $pushAll est déprécié. Deux $push dans le même objet est invalide (clé dupliquée).",
+        "query": {
+          "collection": "users",
+          "operation": "updateOne",
+          "args": [
+            {
+              "username": "alice42"
+            },
+            {
+              "$push": {
+                "tags": {
+                  "$each": [
+                    "music",
+                    "art"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "q60",
+        "enonce": "Trouve les orders qui contiennent exactement 2 items.",
+        "options": [
+          {
+            "code": "db.orders.find({ items: { $size: 2 } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({ items.length: 2 })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ $where: \"this.items.length === 2\" })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ items: { $count: 2 } })",
+            "correct": false
+          }
+        ],
+        "explication": "$size vérifie la taille exacte d'un tableau. items.length n'est pas une syntaxe valide. $where fonctionne mais est déprécié et très lent. $count n'existe pas comme opérateur de filtre.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "items": {
+                "$size": 2
+              }
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca517",
+    "id": "agg-group",
+    "titre": "Group & Comptage",
+    "icon": "🧩",
+    "niveau": "hard",
+    "desc": "$group, $sum, $avg, $min, $max, $count",
+    "questions": [
+      {
+        "id": "q61",
+        "enonce": "Compte le nombre d'utilisateurs par pays, trié par count décroissant.",
+        "options": [
+          {
+            "code": "db.users.aggregate([\n  { $group: { _id:\"$country\", count:{ $sum:1 } } },\n  { $sort: { count:-1 } }\n])",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({}).groupBy(\"country\").count()",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $count: \"country\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $group: { country:\"$country\", n:{ $count:{} } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$group avec _id comme clé. { $sum: 1 } incrémente un compteur. $count comme stage compte le total global.",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$country",
+                  "count": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "count": -1
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q62",
+        "enonce": "Calcule le score moyen de tous les users.",
+        "options": [
+          {
+            "code": "db.users.aggregate([{ $group: { _id: null, avgScore: { $avg: \"$score\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.users.aggregate([{ $avg: \"$score\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $group: { avgScore: { $avg: \"$score\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.average({ score: 1 })",
+            "correct": false
+          }
+        ],
+        "explication": "Pour une agrégation globale (pas par groupe), on utilise _id: null. $avg s'utilise à l'intérieur de $group. average() n'existe pas.",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": null,
+                  "avgScore": {
+                    "$avg": "$score"
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q63",
+        "enonce": "Trouve le prix minimum et maximum des produits par catégorie.",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $group: { _id:\"$category\", minPrice:{ $min:\"$price\" }, maxPrice:{ $max:\"$price\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $group: { _id:\"$category\", price:{ $range:\"$price\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $group: { _id:\"$category\" } }, { $min:\"$price\" }, { $max:\"$price\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $group: { _id:\"$category\", prices:{ $minmax:\"$price\" } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$min et $max sont des accumulateurs utilisables dans $group. $range et $minmax n'existent pas. On ne peut pas mettre $min et $max comme stages indépendants.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$category",
+                  "minPrice": {
+                    "$min": "$price"
+                  },
+                  "maxPrice": {
+                    "$max": "$price"
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q64",
+        "enonce": "Calcule le total moyen des commandes par acheteur, pour ceux avec plus d'une commande.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([\n  { $group: { _id:\"$buyerId\", avg:{ $avg:\"$total\" }, n:{ $sum:1 } } },\n  { $match: { n: { $gt:1 } } }\n])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([\n  { $match: { n:{ $gt:1 } } },\n  { $group: { _id:\"$buyerId\", avg:{ $avg:\"$total\" } } }\n])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group: { _id:\"$buyerId\", avg:{ $mean:\"$total\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({}).aggregate([{ $group: {} }])",
+            "correct": false
+          }
+        ],
+        "explication": "D'abord $group pour calculer n, ensuite $match sur n. $mean n'existe pas. find() ne peut pas chaîner aggregate().",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$buyerId",
+                  "avg": {
+                    "$avg": "$total"
+                  },
+                  "n": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$match": {
+                  "n": {
+                    "$gt": 1
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "avg": -1
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q65",
+        "enonce": "Collecte tous les usernames dans un seul tableau (agrégation globale).",
+        "options": [
+          {
+            "code": "db.users.aggregate([{ $group: { _id: null, usernames: { $push: \"$username\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.users.aggregate([{ $group: { _id: null, usernames: { $collect: \"$username\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $group: { _id: null, usernames: { $array: \"$username\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $addToSet: \"$username\" }])",
+            "correct": false
+          }
+        ],
+        "explication": "$push dans $group accumule les valeurs dans un tableau (avec doublons possibles). $addToSet ferait la même chose sans doublons. $collect et $array n'existent pas.",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": null,
+                  "usernames": {
+                    "$push": "$username"
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q66",
+        "enonce": "Compte le nombre total de commandes par statut.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $group: { _id:\"$status\", total:{ $sum:1 } } }, { $sort:{ total:-1 } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $count: \"status\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group: { _id:\"$status\" } }, { $count: \"total\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({}).groupBy(\"status\")",
+            "correct": false
+          }
+        ],
+        "explication": "$group par status avec $sum: 1. $count comme stage compte tous les documents — pas par groupe. groupBy() n'existe pas en MongoDB natif.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$status",
+                  "total": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "total": -1
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q67",
+        "enonce": "Calcule la somme totale de tous les montants des commandes.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $group: { _id: null, totalRevenue: { $sum: \"$total\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $sum: \"$total\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group: { _id: null, totalRevenue: { $add: \"$total\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.sum({ total: 1 })",
+            "correct": false
+          }
+        ],
+        "explication": "$sum dans $group additionne les valeurs d'un champ. Avec _id: null, on agrège tous les documents. $add est pour additionner des valeurs dans une expression, pas accumuler. sum() n'existe pas.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": null,
+                  "totalRevenue": {
+                    "$sum": "$total"
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q68",
+        "enonce": "Trouve la commande avec le montant le plus élevé (utilise $group).",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $group: { _id: null, maxOrder: { $max: \"$total\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.find({}).sort({ total: -1 }).limit(1)",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $sort: { total: -1 } }, { $limit: 1 }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group: { _id: null, maxOrder: { $top: \"$total\" } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$max dans $group retourne la valeur maximale. Les options B et C fonctionnent aussi mais utilisent sort+limit plutôt que $group. $top n'est pas un accumulateur standard.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": null,
+                  "maxOrder": {
+                    "$max": "$total"
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q69",
+        "enonce": "Compte le nombre de produits par catégorie, mais seulement pour les catégories avec plus de 2 produits.",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $group: { _id:\"$category\", count:{ $sum:1 } } }, { $match:{ count:{ $gt:2 } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $match:{ count:{ $gt:2 } } }, { $group:{ _id:\"$category\", count:{ $sum:1 } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $group:{ _id:\"$category\", count:{ $sum:1 } } }, { $where:\"this.count > 2\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $group:{ _id:\"$category\", count:{ $sum:1 } } }, { $filter:{ count:{ $gt:2 } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$group d'abord pour créer le champ count, puis $match pour filtrer dessus. L'ordre est crucial. $where dans une pipeline et $filter comme stage indépendant n'existent pas.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$category",
+                  "count": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$match": {
+                  "count": {
+                    "$gt": 1
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q70",
+        "enonce": "Calcule le nombre moyen d'items par commande.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $group: { _id: null, avgItems: { $avg: { $size: \"$items\" } } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $group: { _id: null, avgItems: { $avg: \"$items\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $avg: { $size: \"$items\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group: { _id: null, avgItems: { $mean: { $size: \"$items\" } } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "On peut imbriquer des expressions : $avg de $size. $avg: '$items' essaierait de faire la moyenne d'un tableau d'objets, pas de sa taille. $mean n'existe pas.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": null,
+                  "avgItems": {
+                    "$avg": {
+                      "$size": "$items"
+                    }
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca518",
+    "id": "agg-lookup",
+    "titre": "$lookup — Jointure",
+    "icon": "🔗",
+    "niveau": "hard",
+    "desc": "Jointures entre collections",
+    "questions": [
+      {
+        "id": "q71",
+        "enonce": "Pour chaque commande, intègre les informations de l'acheteur.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([\n  { $lookup: { from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\" }},\n  { $unwind: \"$buyer\" }\n])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $join: { collection:\"users\", on:\"buyerId\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({}).populate(\"buyerId\")",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"users\", as:\"buyer\" } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$lookup nécessite from, localField, foreignField et as. $unwind transforme le tableau résultat en objet. $join n'existe pas. populate() est Mongoose.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "buyerId",
+                  "foreignField": "_id",
+                  "as": "buyer"
+                }
+              },
+              {
+                "$unwind": "$buyer"
+              },
+              {
+                "$project": {
+                  "status": 1,
+                  "total": 1,
+                  "buyer.username": 1,
+                  "buyer.country": 1
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q72",
+        "enonce": "Que retourne $lookup sans $unwind ensuite ?",
+        "options": [
+          {
+            "code": "// Un tableau (potentiellement vide ou avec plusieurs éléments)\n{ ..., buyer: [ {...userDoc} ] }",
+            "correct": true
+          },
+          {
+            "code": "// Un seul objet\n{ ..., buyer: {...userDoc} }",
+            "correct": false
+          },
+          {
+            "code": "// Une erreur si plusieurs résultats",
+            "correct": false
+          },
+          {
+            "code": "// null si aucun résultat",
+            "correct": false
+          }
+        ],
+        "explication": "$lookup retourne TOUJOURS un tableau — même s'il n'y a qu'un résultat. C'est pourquoi $unwind est nécessaire pour obtenir un objet unique. Un tableau vide [] si aucune correspondance.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "buyerId",
+                  "foreignField": "_id",
+                  "as": "buyer"
+                }
+              },
+              {
+                "$project": {
+                  "status": 1,
+                  "buyer": 1
+                }
+              },
+              {
+                "$limit": 2
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q73",
+        "enonce": "Pour chaque produit, intègre les informations du vendeur (sellerId → users).",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $lookup: { from:\"users\", localField:\"sellerId\", foreignField:\"_id\", as:\"seller\" } }, { $unwind: \"$seller\" }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $lookup: { from:\"users\", on:\"sellerId\", as:\"seller\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $join: { users: \"sellerId\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $lookup: { collection:\"users\", field:\"sellerId\", as:\"seller\" } }])",
+            "correct": false
+          }
+        ],
+        "explication": "Les paramètres exacts de $lookup : from (collection cible), localField (champ local), foreignField (champ dans la collection cible), as (nom du champ résultat). on, join, collection, field ne sont pas les bons paramètres.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "sellerId",
+                  "foreignField": "_id",
+                  "as": "seller"
+                }
+              },
+              {
+                "$unwind": "$seller"
+              },
+              {
+                "$project": {
+                  "name": 1,
+                  "price": 1,
+                  "seller.username": 1
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q74",
+        "enonce": "Garde uniquement les orders pour lesquelles l'acheteur existe (inner join).",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\" } }, { $match: { buyer: { $ne: [] } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\", type:\"inner\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $innerJoin: { from:\"users\", on:\"buyerId\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\" } }, { $unwind: \"$buyer\" }])",
+            "correct": false
+          }
+        ],
+        "explication": "Par défaut $lookup est un left outer join. Pour simuler un inner join, on filtre les résultats vides avec $match: { buyer: { $ne: [] } }. L'option D avec $unwind a le même effet car $unwind supprime par défaut les documents avec un tableau vide.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "buyerId",
+                  "foreignField": "_id",
+                  "as": "buyer"
+                }
+              },
+              {
+                "$match": {
+                  "buyer": {
+                    "$ne": []
+                  }
+                }
+              },
+              {
+                "$project": {
+                  "status": 1,
+                  "total": 1
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q75",
+        "enonce": "Pour chaque commande, récupère le nom des produits commandés.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $unwind: \"$items\" }, { $lookup: { from:\"products\", localField:\"items.productId\", foreignField:\"_id\", as:\"product\" } }, { $unwind: \"$product\" }, { $group: { _id:\"$_id\", products:{ $push:\"$product.name\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"products\", localField:\"items\", foreignField:\"_id\", as:\"products\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"products\", localField:\"items.productId\", foreignField:\"_id\", as:\"product\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $join: { products: \"items.productId\" } }])",
+            "correct": false
+          }
+        ],
+        "explication": "Il faut d'abord $unwind items pour avoir accès à items.productId, puis $lookup sur chaque productId, puis regrouper. Sans $unwind préalable, localField pointerait vers un tableau entier.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$unwind": "$items"
+              },
+              {
+                "$lookup": {
+                  "from": "products",
+                  "localField": "items.productId",
+                  "foreignField": "_id",
+                  "as": "product"
+                }
+              },
+              {
+                "$unwind": "$product"
+              },
+              {
+                "$group": {
+                  "_id": "$_id",
+                  "status": {
+                    "$first": "$status"
+                  },
+                  "products": {
+                    "$push": "$product.name"
+                  }
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q76",
+        "enonce": "Affiche les commandes avec le username de l'acheteur, uniquement pour les commandes 'delivered'.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $match: { status:\"delivered\" } }, { $lookup: { from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\" } }, { $unwind:\"$buyer\" }, { $project: { total:1, \"buyer.username\":1 } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\" } }, { $match: { status:\"delivered\" } }, { $unwind:\"$buyer\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $lookup: { from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\" } }, { $unwind:\"$buyer\" }, { $match: { status:\"delivered\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $match: { status:\"delivered\", \"buyer.username\": { $exists:true } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$match en premier réduit les données avant le $lookup coûteux — c'est une optimisation importante. Les options B et C fonctionnent mais sont moins efficaces car $lookup s'applique à tous les documents.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$match": {
+                  "status": "delivered"
+                }
+              },
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "buyerId",
+                  "foreignField": "_id",
+                  "as": "buyer"
+                }
+              },
+              {
+                "$unwind": "$buyer"
+              },
+              {
+                "$project": {
+                  "total": 1,
+                  "buyer.username": 1
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q77",
+        "enonce": "Que fait $unwind sur un document avec un tableau vide ?",
+        "options": [
+          {
+            "code": "// Supprime le document du résultat (comportement par défaut)",
+            "correct": true
+          },
+          {
+            "code": "// Retourne le document avec le champ à null",
+            "correct": false
+          },
+          {
+            "code": "// Génère une erreur",
+            "correct": false
+          },
+          {
+            "code": "// Retourne le document inchangé",
+            "correct": false
+          }
+        ],
+        "explication": "Par défaut, $unwind supprime les documents dont le tableau est vide ou null. Pour garder ces documents, utiliser { path: '$field', preserveNullAndEmptyArrays: true }.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "buyerId",
+                  "foreignField": "_id",
+                  "as": "buyer"
+                }
+              },
+              {
+                "$project": {
+                  "status": 1,
+                  "buyerCount": {
+                    "$size": "$buyer"
+                  }
+                }
+              },
+              {
+                "$limit": 3
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q78",
+        "enonce": "Pour chaque user, compte le nombre de commandes passées via $lookup.",
+        "options": [
+          {
+            "code": "db.users.aggregate([{ $lookup: { from:\"orders\", localField:\"_id\", foreignField:\"buyerId\", as:\"orders\" } }, { $project: { username:1, orderCount:{ $size:\"$orders\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.users.aggregate([{ $lookup: { from:\"orders\", localField:\"_id\", foreignField:\"buyerId\", as:\"orders\" } }, { $group: { _id:\"$_id\", orderCount:{ $sum:1 } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group: { _id:\"$buyerId\", count:{ $sum:1 } } }, { $lookup: { from:\"users\", localField:\"_id\", foreignField:\"_id\", as:\"user\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $count: { orders: \"buyerId\" } }])",
+            "correct": false
+          }
+        ],
+        "explication": "On part de users, on $lookup les orders, et on utilise $size sur le tableau résultat pour compter. L'option C fonctionnerait aussi (approche inverse) mais ne renvoie pas les users sans commandes.",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "orders",
+                  "localField": "_id",
+                  "foreignField": "buyerId",
+                  "as": "orders"
+                }
+              },
+              {
+                "$project": {
+                  "username": 1,
+                  "orderCount": {
+                    "$size": "$orders"
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "orderCount": -1
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q79",
+        "enonce": "Affiche les produits avec la note moyenne calculée depuis le tableau ratings imbriqué.",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $project: { name:1, avgRating:{ $avg:\"$ratings.score\" } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $unwind:\"$ratings\" }, { $group:{ _id:\"$_id\", name:{ $first:\"$name\" }, avgRating:{ $avg:\"$ratings.score\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $group:{ _id:\"$_id\", avgRating:{ $avg:\"$ratings\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $project:{ name:1, avgRating:{ $mean:\"$ratings.score\" } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "Dans $project, $avg sur un tableau imbriqué calcule la moyenne des valeurs. La notation pointée $ratings.score fonctionne ici pour accéder aux scores. L'option B fonctionne aussi. $mean n'existe pas.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$project": {
+                  "name": 1,
+                  "avgRating": {
+                    "$avg": "$ratings.score"
+                  }
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q80",
+        "enonce": "Quels sont les 3 vendeurs avec le plus grand nombre de produits listés ?",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $group: { _id:\"$sellerId\", count:{ $sum:1 } } }, { $sort:{ count:-1 } }, { $limit:3 }, { $lookup:{ from:\"users\", localField:\"_id\", foreignField:\"_id\", as:\"seller\" } }, { $unwind:\"$seller\" }, { $project:{ \"seller.username\":1, count:1 } }])",
+            "correct": true
+          },
+          {
+            "code": "db.users.aggregate([{ $lookup:{ from:\"products\", localField:\"_id\", foreignField:\"sellerId\", as:\"products\" } }, { $sort:{ \"products.length\":-1 } }, { $limit:3 }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $lookup:{ from:\"users\", localField:\"sellerId\", foreignField:\"_id\", as:\"seller\" } }, { $group:{ _id:\"$seller.username\", count:{ $sum:1 } } }, { $sort:{ count:-1 } }, { $limit:3 }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $group:{ _id:\"$sellerId\", count:{ $sum:1 } } }, { $sort:{ count:-1 } }, { $limit:3 }])",
+            "correct": false
+          }
+        ],
+        "explication": "Pipeline optimal : (1) $group par sellerId pour compter, (2) $sort + $limit pour garder le top 3 AVANT le $lookup (optimisation), (3) $lookup pour récupérer le username. Faire le $lookup avant réduirait l'efficacité.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$sellerId",
+                  "count": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "count": -1
+                }
+              },
+              {
+                "$limit": 3
+              },
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "_id",
+                  "foreignField": "_id",
+                  "as": "seller"
+                }
+              },
+              {
+                "$unwind": "$seller"
+              },
+              {
+                "$project": {
+                  "seller.username": 1,
+                  "count": 1
+                }
+              }
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca519",
+    "id": "agg-pipeline",
+    "titre": "Pipeline complet",
+    "icon": "⚙️",
+    "niveau": "hard",
+    "desc": "$match → $unwind → $lookup → $group → $project → $sort",
+    "questions": [
+      {
+        "id": "q81",
+        "enonce": "Top 3 catégories par chiffre d'affaires sur les commandes 'delivered' de 2024.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $match:{ status:\"delivered\", createdAt:{ $gte:new Date(\"2024-01-01\"), $lt:new Date(\"2025-01-01\") } } }, { $unwind:\"$items\" }, { $lookup:{ from:\"products\", localField:\"items.productId\", foreignField:\"_id\", as:\"prod\" } }, { $unwind:\"$prod\" }, { $group:{ _id:\"$prod.category\", revenue:{ $sum:{ $multiply:[\"$items.qty\",\"$items.unitPrice\"] } } } }, { $sort:{ revenue:-1 } }, { $limit:3 }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:\"$category\", revenue:{ $sum:\"$total\" } } }, { $sort:{ revenue:-1 } }, { $limit:3 }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $group:{ _id:\"$category\", rev:{ $sum:\"$price\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.find({ status:\"delivered\" }).sort({ total:-1 }).limit(3)",
+            "correct": false
+          }
+        ],
+        "explication": "Pipeline en 7 étapes : $match tôt, $unwind items, $lookup catégorie, $unwind résultat, $group avec qty × unitPrice, $sort, $limit.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$match": {
+                  "status": "delivered",
+                  "createdAt": {
+                    "$gte": {
+                      "$date": "2024-01-01"
+                    },
+                    "$lt": {
+                      "$date": "2025-01-01"
+                    }
+                  }
+                }
+              },
+              {
+                "$unwind": "$items"
+              },
+              {
+                "$lookup": {
+                  "from": "products",
+                  "localField": "items.productId",
+                  "foreignField": "_id",
+                  "as": "prod"
+                }
+              },
+              {
+                "$unwind": "$prod"
+              },
+              {
+                "$group": {
+                  "_id": "$prod.category",
+                  "revenue": {
+                    "$sum": {
+                      "$multiply": [
+                        "$items.qty",
+                        "$items.unitPrice"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "revenue": -1
+                }
+              },
+              {
+                "$limit": 3
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q82",
+        "enonce": "Quelle est la règle d'or pour positionner $match dans un pipeline ?",
+        "options": [
+          {
+            "code": "// Toujours aussi tôt que possible dans le pipeline\n// pour réduire le nombre de documents à traiter",
+            "correct": true
+          },
+          {
+            "code": "// Toujours en dernier pour filtrer les résultats finaux",
+            "correct": false
+          },
+          {
+            "code": "// N'importe où — MongoDB réordonne automatiquement",
+            "correct": false
+          },
+          {
+            "code": "// Après $group pour filtrer les agrégats",
+            "correct": false
+          }
+        ],
+        "explication": "Mettre $match tôt réduit le nombre de documents qui traversent les stages suivants (coûteux). MongoDB peut utiliser des index sur un $match en début de pipeline. Il peut aussi y avoir plusieurs $match dans un pipeline.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$match": {
+                  "status": "delivered"
+                }
+              },
+              {
+                "$group": {
+                  "_id": null,
+                  "count": {
+                    "$sum": 1
+                  },
+                  "totalRevenue": {
+                    "$sum": "$total"
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q83",
+        "enonce": "Calcule le panier moyen par pays (total moyen des orders par pays de l'acheteur).",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $lookup:{ from:\"users\", localField:\"buyerId\", foreignField:\"_id\", as:\"buyer\" } }, { $unwind:\"$buyer\" }, { $group:{ _id:\"$buyer.country\", avgBasket:{ $avg:\"$total\" } } }, { $sort:{ avgBasket:-1 } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:\"$country\", avgBasket:{ $avg:\"$total\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $group:{ _id:\"$country\", avgTotal:{ $avg:\"$orders.total\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:\"$buyerId.country\", avgBasket:{ $avg:\"$total\" } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "Il faut d'abord $lookup pour récupérer le pays de l'acheteur, puis $group par country. On ne peut pas accéder à buyerId.country directement — buyerId est un ObjectId, pas un objet imbriqué.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "users",
+                  "localField": "buyerId",
+                  "foreignField": "_id",
+                  "as": "buyer"
+                }
+              },
+              {
+                "$unwind": "$buyer"
+              },
+              {
+                "$group": {
+                  "_id": "$buyer.country",
+                  "avgBasket": {
+                    "$avg": "$total"
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "avgBasket": -1
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q84",
+        "enonce": "Liste les users qui n'ont jamais passé de commande.",
+        "options": [
+          {
+            "code": "db.users.aggregate([{ $lookup:{ from:\"orders\", localField:\"_id\", foreignField:\"buyerId\", as:\"orders\" } }, { $match:{ orders:{ $size:0 } } }, { $project:{ username:1 } }])",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ orders: { $size: 0 } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:\"$buyerId\" } }, { $match:{ _id:{ $not:{ $in: [] } } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $match:{ orders:{ $exists:false } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "On $lookup les orders pour chaque user, puis on filtre ceux dont le tableau orders est vide ($size: 0). Les orders ne sont pas un champ dans la collection users — il faut passer par $lookup.",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$lookup": {
+                  "from": "orders",
+                  "localField": "_id",
+                  "foreignField": "buyerId",
+                  "as": "orders"
+                }
+              },
+              {
+                "$match": {
+                  "orders": {
+                    "$size": 0
+                  }
+                }
+              },
+              {
+                "$project": {
+                  "username": 1,
+                  "_id": 0
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q85",
+        "enonce": "Crée un rapport : pour chaque statut de commande, le nombre et le total cumulé.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:\"$status\", count:{ $sum:1 }, totalAmount:{ $sum:\"$total\" } } }, { $sort:{ count:-1 } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:\"$status\" } }, { $count:\"total\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:\"$status\", count:{ $count:{} } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.countDocuments().groupBy(\"status\")",
+            "correct": false
+          }
+        ],
+        "explication": "Un seul $group peut calculer plusieurs métriques simultanément avec différents accumulateurs ($sum:1 pour compter, $sum:'$total' pour additionner). $count:{} comme accumulateur n'existe pas.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$status",
+                  "count": {
+                    "$sum": 1
+                  },
+                  "totalAmount": {
+                    "$sum": "$total"
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "count": -1
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q86",
+        "enonce": "Utilise $project pour créer un champ 'priceWithTax' = price * 1.2.",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $project: { name:1, price:1, priceWithTax:{ $multiply:[\"$price\", 1.2] } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $project: { name:1, priceWithTax: \"$price * 1.2\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $addFields: { priceWithTax: { $multiply:[\"$price\", 1.2] } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $project: { name:1, priceWithTax: { $calc: { $price: 1.2 } } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$multiply est un opérateur d'expression arithmétique. L'option C avec $addFields est aussi correcte et garde tous les champs existants. 'price * 1.2' est une string, pas une expression. $calc n'existe pas.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$project": {
+                  "name": 1,
+                  "price": 1,
+                  "priceWithTax": {
+                    "$multiply": [
+                      "$price",
+                      1.2
+                    ]
+                  }
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q87",
+        "enonce": "Utilise $addFields pour ajouter un champ 'isExpensive' = true si price > 100.",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $addFields: { isExpensive: { $gt: [\"$price\", 100] } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $project: { isExpensive: { $if: \"$price > 100\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $addFields: { isExpensive: \"$price > 100\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $addFields: { isExpensive: { $cond: \"$price > 100\" } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$gt dans une expression retourne true/false. Syntaxe : { $gt: [valeur1, valeur2] }. Les expressions JavaScript comme 'price > 100' ne fonctionnent pas. $cond nécessite { if, then, else }.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$addFields": {
+                  "isExpensive": {
+                    "$gt": [
+                      "$price",
+                      100
+                    ]
+                  }
+                }
+              },
+              {
+                "$project": {
+                  "name": 1,
+                  "price": 1,
+                  "isExpensive": 1
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q88",
+        "enonce": "Utilise $cond pour créer un champ 'category_label' : 'Cher' si price > 50, 'Abordable' sinon.",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $project: { name:1, price:1, label:{ $cond:{ if:{ $gt:[\"$price\",50] }, then:\"Cher\", else:\"Abordable\" } } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $project: { name:1, label:{ $if: { $gt:[\"$price\",50] }, \"Cher\", \"Abordable\" } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $project: { name:1, label:{ $switch: { $price: 50, cases: [\"Cher\",\"Abordable\"] } } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $addFields: { label: \"$price > 50 ? Cher : Abordable\" } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$cond prend { if, then, else }. C'est l'équivalent de l'opérateur ternaire. $switch existe aussi pour plusieurs cas. $if n'existe pas comme opérateur direct.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$project": {
+                  "name": 1,
+                  "price": 1,
+                  "label": {
+                    "$cond": {
+                      "if": {
+                        "$gt": [
+                          "$price",
+                          50
+                        ]
+                      },
+                      "then": "Cher",
+                      "else": "Abordable"
+                    }
+                  }
+                }
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q89",
+        "enonce": "Utilise $limit et $skip dans un pipeline pour la page 2 (5 résultats par page).",
+        "options": [
+          {
+            "code": "db.products.aggregate([{ $sort:{ price:1 } }, { $skip: 5 }, { $limit: 5 }])",
+            "correct": true
+          },
+          {
+            "code": "db.products.aggregate([{ $sort:{ price:1 } }, { $limit: 5 }, { $skip: 5 }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $skip: 5 }, { $limit: 5 }, { $sort:{ price:1 } }])",
+            "correct": false
+          },
+          {
+            "code": "db.products.aggregate([{ $sort:{ price:1 } }, { $page: 2, $size: 5 }])",
+            "correct": false
+          }
+        ],
+        "explication": "Dans un pipeline d'agrégation l'ordre est : $sort → $skip → $limit. Si on met $limit avant $skip, on limiterait d'abord à 5 documents puis on en sauterait 5 — résultat vide. $page n'existe pas.",
+        "query": {
+          "collection": "products",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$sort": {
+                  "price": 1
+                }
+              },
+              {
+                "$skip": 5
+              },
+              {
+                "$limit": 5
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q90",
+        "enonce": "Utilise $out pour sauvegarder le résultat d'une agrégation dans une nouvelle collection 'stats_par_pays'.",
+        "options": [
+          {
+            "code": "db.users.aggregate([{ $group:{ _id:\"$country\", count:{ $sum:1 } } }, { $out: \"stats_par_pays\" }])",
+            "correct": true
+          },
+          {
+            "code": "db.users.aggregate([{ $group:{ _id:\"$country\", count:{ $sum:1 } } }]).save(\"stats_par_pays\")",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $group:{ _id:\"$country\", count:{ $sum:1 } } }, { $save: \"stats_par_pays\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $group:{ _id:\"$country\", count:{ $sum:1 } } }]).toCollection(\"stats_par_pays\")",
+            "correct": false
+          }
+        ],
+        "explication": "$out écrit le résultat du pipeline dans une collection (la crée ou la remplace). C'est un stage terminal. save(), $save et toCollection() n'existent pas.",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": "$country",
+                  "count": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "count": -1
+                }
+              }
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca51a",
+    "id": "index",
+    "titre": "Index",
+    "icon": "⚡",
+    "niveau": "expert",
+    "desc": "Créer, analyser, optimiser avec explain()",
+    "questions": [
+      {
+        "id": "q91",
+        "enonce": "Crée un index composé sur users pour optimiser les requêtes filtrant par country puis triant par score décroissant.",
+        "options": [
+          {
+            "code": "db.users.createIndex({ country: 1, score: -1 })",
+            "correct": true
+          },
+          {
+            "code": "db.users.createIndex({ score: -1, country: 1 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.createIndex({ country: 1 })\ndb.users.createIndex({ score: -1 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.createIndex({ country: 1, score: 1 })",
+            "correct": false
+          }
+        ],
+        "explication": "Règle ESR : Equality → Sort → Range. Champs d'égalité en premier (country:1), puis tri en respectant la direction (score:-1). Deux index séparés ne peuvent pas être combinés efficacement.",
+        "query": {
+          "collection": "users",
+          "operation": "createIndex",
+          "args": [
+            {
+              "country": 1,
+              "score": -1
+            },
+            {
+              "name": "country_1_score_-1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "q92",
+        "enonce": "Quelle commande montre le plan d'exécution avec les statistiques ?",
+        "options": [
+          {
+            "code": "db.users.find({ email:\"x@y.com\" }).explain(\"executionStats\")",
+            "correct": true
+          },
+          {
+            "code": "db.users.find({ email:\"x@y.com\" }).analyze()",
+            "correct": false
+          },
+          {
+            "code": "db.explain(db.users.find({ email:\"x@y.com\" }))",
+            "correct": false
+          },
+          {
+            "code": "db.users.queryPlan({ email:\"x@y.com\" })",
+            "correct": false
+          }
+        ],
+        "explication": ".explain('executionStats') retourne IXSCAN (bon) ou COLLSCAN (lent). analyze() et queryPlan() n'existent pas.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "country": "FR"
+            }
+          ],
+          "options": {
+            "sort": {
+              "score": -1
+            },
+            "limit": 3
+          }
+        }
+      },
+      {
+        "id": "q93",
+        "enonce": "Crée un index unique sur le champ email de la collection users.",
+        "options": [
+          {
+            "code": "db.users.createIndex({ email: 1 }, { unique: true })",
+            "correct": true
+          },
+          {
+            "code": "db.users.createIndex({ email: 1 }, { type: \"unique\" })",
+            "correct": false
+          },
+          {
+            "code": "db.users.createUniqueIndex({ email: 1 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.createIndex({ email: 1, unique: true })",
+            "correct": false
+          }
+        ],
+        "explication": "L'option unique se passe en 2ème argument de createIndex. createUniqueIndex() n'existe pas. unique ne fait pas partie de la clé d'index.",
+        "query": {
+          "collection": "users",
+          "operation": "createIndex",
+          "args": [
+            {
+              "email": 1
+            },
+            {
+              "unique": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "q94",
+        "enonce": "Liste tous les index existants sur la collection users.",
+        "options": [
+          {
+            "code": "db.users.getIndexes()",
+            "correct": true
+          },
+          {
+            "code": "db.users.listIndexes()",
+            "correct": false
+          },
+          {
+            "code": "db.users.indexes()",
+            "correct": false
+          },
+          {
+            "code": "db.getIndexes(\"users\")",
+            "correct": false
+          }
+        ],
+        "explication": "getIndexes() retourne tous les index de la collection. listIndexes() est une commande bas niveau qui retourne un curseur. indexes() n'existe pas en shell.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "limit": 1
+          }
+        }
+      },
+      {
+        "id": "q95",
+        "enonce": "Supprime l'index nommé 'country_1_score_-1' de la collection users.",
+        "options": [
+          {
+            "code": "db.users.dropIndex(\"country_1_score_-1\")",
+            "correct": true
+          },
+          {
+            "code": "db.users.removeIndex(\"country_1_score_-1\")",
+            "correct": false
+          },
+          {
+            "code": "db.users.deleteIndex({ country:1, score:-1 })",
+            "correct": false
+          },
+          {
+            "code": "db.users.dropIndex({ country:1, score:-1 })",
+            "correct": false
+          }
+        ],
+        "explication": "dropIndex() accepte le nom de l'index (string) ou sa spécification (objet). Les deux options A et D fonctionnent. removeIndex() et deleteIndex() n'existent pas.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "limit": 1
+          }
+        }
+      },
+      {
+        "id": "q96",
+        "enonce": "Crée un index TTL qui supprime automatiquement les sessions après 1 heure.",
+        "options": [
+          {
+            "code": "db.sessions.createIndex({ createdAt: 1 }, { expireAfterSeconds: 3600 })",
+            "correct": true
+          },
+          {
+            "code": "db.sessions.createIndex({ createdAt: 1 }, { ttl: 3600 })",
+            "correct": false
+          },
+          {
+            "code": "db.sessions.createIndex({ createdAt: 1 }, { expires: \"1h\" })",
+            "correct": false
+          },
+          {
+            "code": "db.sessions.createTTLIndex({ createdAt: 1 }, 3600)",
+            "correct": false
+          }
+        ],
+        "explication": "Un index TTL utilise expireAfterSeconds. Le champ doit être de type Date. MongoDB supprime automatiquement les documents dont la date est plus ancienne que la durée spécifiée. ttl, expires et createTTLIndex() n'existent pas.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "limit": 1
+          }
+        }
+      },
+      {
+        "id": "q97",
+        "enonce": "Crée un index partiel sur orders, uniquement pour les commandes 'pending'.",
+        "options": [
+          {
+            "code": "db.orders.createIndex({ createdAt: 1 }, { partialFilterExpression: { status: \"pending\" } })",
+            "correct": true
+          },
+          {
+            "code": "db.orders.createIndex({ createdAt: 1 }, { where: { status: \"pending\" } })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.createIndex({ createdAt: 1, status: \"pending\" })",
+            "correct": false
+          },
+          {
+            "code": "db.orders.createIndex({ createdAt: 1 }, { filter: { status: \"pending\" } })",
+            "correct": false
+          }
+        ],
+        "explication": "Un index partiel (partial index) n'indexe que les documents satisfaisant partialFilterExpression. Il est plus petit et plus rapide qu'un index complet. where et filter ne sont pas les bons paramètres.",
+        "query": {
+          "collection": "orders",
+          "operation": "find",
+          "args": [
+            {
+              "status": "pending"
+            }
+          ],
+          "options": {
+            "limit": 5
+          }
+        }
+      },
+      {
+        "id": "q98",
+        "enonce": "Dans explain(), quelle valeur du champ 'stage' indique qu'un index est utilisé ?",
+        "options": [
+          {
+            "code": "IXSCAN — Index Scan",
+            "correct": true
+          },
+          {
+            "code": "COLLSCAN — Collection Scan",
+            "correct": false
+          },
+          {
+            "code": "IDXSCAN — Indexed Scan",
+            "correct": false
+          },
+          {
+            "code": "FASTSCAN — Fast Scan",
+            "correct": false
+          }
+        ],
+        "explication": "IXSCAN = index utilisé (rapide). COLLSCAN = scan complet de la collection (lent sur grandes collections). IDXSCAN et FASTSCAN n'existent pas dans MongoDB.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "country": "FR"
+            }
+          ],
+          "options": {
+            "limit": 3
+          }
+        }
+      },
+      {
+        "id": "q99",
+        "enonce": "Crée un index texte sur le champ 'name' des products pour la recherche full-text.",
+        "options": [
+          {
+            "code": "db.products.createIndex({ name: \"text\" })",
+            "correct": true
+          },
+          {
+            "code": "db.products.createIndex({ name: 1 }, { type: \"fulltext\" })",
+            "correct": false
+          },
+          {
+            "code": "db.products.createTextIndex({ name: 1 })",
+            "correct": false
+          },
+          {
+            "code": "db.products.createIndex({ name: \"fulltext\" })",
+            "correct": false
+          }
+        ],
+        "explication": "Un index texte se crée avec la valeur 'text' (string). Une collection ne peut avoir qu'un seul index texte. La recherche s'effectue ensuite avec $text: { $search: 'mot' }. 'fulltext' n'est pas une valeur valide.",
+        "query": {
+          "collection": "products",
+          "operation": "find",
+          "args": [
+            {}
+          ],
+          "options": {
+            "limit": 3
+          }
+        }
+      },
+      {
+        "id": "q100",
+        "enonce": "Quelle est la règle ESR pour les index composés ?",
+        "options": [
+          {
+            "code": "// Equality → Sort → Range\n// Champs d'égalité, puis tri, puis range",
+            "correct": true
+          },
+          {
+            "code": "// Range → Sort → Equality\n// Du plus sélectif au moins sélectif",
+            "correct": false
+          },
+          {
+            "code": "// Sort → Equality → Range\n// Le tri est toujours en premier",
+            "correct": false
+          },
+          {
+            "code": "// Equality → Range → Sort\n// Égalité, puis range, puis tri",
+            "correct": false
+          }
+        ],
+        "explication": "ESR : Equality en premier (le plus sélectif), Sort ensuite (pour éviter un tri en mémoire), Range en dernier (car il produit un range scan). Cette règle optimise l'utilisation des index composés.",
+        "query": {
+          "collection": "users",
+          "operation": "find",
+          "args": [
+            {
+              "country": "FR",
+              "score": {
+                "$gt": 1000
+              }
+            }
+          ],
+          "options": {
+            "sort": {
+              "score": -1
+            },
+            "limit": 3
+          }
+        }
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca51b",
+    "id": "transactions",
+    "titre": "Transactions",
+    "icon": "🔐",
+    "niveau": "expert",
+    "desc": "Sessions, ACID, withTransaction",
+    "questions": [
+      {
+        "id": "q101",
+        "enonce": "Comment créer une commande ET décrémenter le stock de façon atomique ?",
+        "options": [
+          {
+            "code": "const session = client.startSession()\nawait session.withTransaction(async () => {\n  await db.orders.insertOne(orderDoc, { session })\n  await db.products.updateOne(\n    { _id: productId },\n    { $inc: { stock: -qty } },\n    { session }\n  )\n})",
+            "correct": true
+          },
+          {
+            "code": "await db.orders.insertOne(orderDoc)\nawait db.products.updateOne({ _id: productId }, { $inc:{ stock:-qty } })",
+            "correct": false
+          },
+          {
+            "code": "db.runCommand({ transaction: [{ insert:\"orders\" }, { update:\"products\" }] })",
+            "correct": false
+          },
+          {
+            "code": "await db.orders.insertOne(orderDoc, { atomic: true })\nawait db.products.updateOne(..., { atomic: true })",
+            "correct": false
+          }
+        ],
+        "explication": "Les transactions nécessitent une ClientSession. Passer { session } à chaque opération. withTransaction() gère le commit et le rollback. Les options B et D ne sont pas atomiques.",
+        "query": null
+      },
+      {
+        "id": "q102",
+        "enonce": "Que se passe-t-il si une opération dans withTransaction() lève une exception ?",
+        "options": [
+          {
+            "code": "// La transaction est automatiquement annulée (rollback)\n// Toutes les opérations précédentes sont défaites",
+            "correct": true
+          },
+          {
+            "code": "// Les opérations précédentes sont commitées\n// Seule l'opération qui a échoué est annulée",
+            "correct": false
+          },
+          {
+            "code": "// La transaction continue avec les opérations suivantes",
+            "correct": false
+          },
+          {
+            "code": "// MongoDB essaie automatiquement 3 fois avant d'abandonner",
+            "correct": false
+          }
+        ],
+        "explication": "C'est la garantie ACID de l'atomicité. withTransaction() gère automatiquement le rollback en cas d'erreur — soit tout réussit, soit rien n'est appliqué. C'est la différence avec deux opérations séparées.",
+        "query": null
+      },
+      {
+        "id": "q103",
+        "enonce": "Quelle version de MongoDB supporte les transactions multi-documents ?",
+        "options": [
+          {
+            "code": "// MongoDB 4.0+ pour les replica sets\n// MongoDB 4.2+ pour les sharded clusters",
+            "correct": true
+          },
+          {
+            "code": "// MongoDB 2.0+ — disponible depuis le début",
+            "correct": false
+          },
+          {
+            "code": "// MongoDB 6.0+ uniquement",
+            "correct": false
+          },
+          {
+            "code": "// Toutes les versions via le driver",
+            "correct": false
+          }
+        ],
+        "explication": "Les transactions multi-documents ont été introduites en 4.0 pour les replica sets et étendues aux sharded clusters en 4.2. Avant, seules les opérations sur un seul document étaient atomiques.",
+        "query": null
+      },
+      {
+        "id": "q104",
+        "enonce": "Quelle est la différence entre atomicité d'un document et transaction multi-documents ?",
+        "options": [
+          {
+            "code": "// Document unique : toujours atomique en MongoDB\n// Multi-documents : nécessite une transaction explicite",
+            "correct": true
+          },
+          {
+            "code": "// Aucune différence — MongoDB est toujours ACID",
+            "correct": false
+          },
+          {
+            "code": "// Document unique n'est pas atomique\n// Seules les transactions le sont",
+            "correct": false
+          },
+          {
+            "code": "// Les transactions ne concernent que les insertions",
+            "correct": false
+          }
+        ],
+        "explication": "MongoDB garantit l'atomicité d'une opération sur un seul document (même avec des sous-documents complexes). Pour plusieurs documents ou collections, il faut une transaction explicite avec session.",
+        "query": null
+      },
+      {
+        "id": "q105",
+        "enonce": "Comment passer une session à une opération d'agrégation ?",
+        "options": [
+          {
+            "code": "await db.orders.aggregate([{ $match: {} }], { session })",
+            "correct": true
+          },
+          {
+            "code": "await db.orders.aggregate([{ $match: {} }, { session }])",
+            "correct": false
+          },
+          {
+            "code": "await session.aggregate(db.orders, [{ $match: {} }])",
+            "correct": false
+          },
+          {
+            "code": "await db.orders.aggregate([{ $match: {} }]).session(session)",
+            "correct": false
+          }
+        ],
+        "explication": "La session se passe en 2ème argument (options) de aggregate(), pas dans le pipeline. Toutes les opérations MongoDB acceptent un objet options en dernier argument.",
+        "query": null
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca51c",
+    "id": "schema-design",
+    "titre": "Conception de schéma",
+    "icon": "🏗",
+    "niveau": "expert",
+    "desc": "Embed vs référence, patterns MongoDB",
+    "questions": [
+      {
+        "id": "q106",
+        "enonce": "Un post peut avoir des milliers de commentaires. Quelle approche choisir ?",
+        "options": [
+          {
+            "code": "// Pattern Référence\n// posts: { _id, text, authorId }\n// comments: { _id, postId, text, authorId }",
+            "correct": true
+          },
+          {
+            "code": "// Embed tous les commentaires dans le post\n// posts: { _id, text, comments: [ ...tous ] }",
+            "correct": false
+          },
+          {
+            "code": "// Une base MongoDB par post",
+            "correct": false
+          },
+          {
+            "code": "// Embed seulement les 3 derniers commentaires",
+            "correct": false
+          }
+        ],
+        "explication": "La limite BSON est 16MB. Tableau non borné = dangereux. Le pattern Référence est scalable. L'option D (Subset Pattern) est utile en complément mais pas comme seul stockage.",
+        "query": null
+      },
+      {
+        "id": "q107",
+        "enonce": "Un user peut avoir jusqu'à 500 amis. Comment modéliser ?",
+        "options": [
+          {
+            "code": "// Embed les IDs : users: { _id, name, friendIds: [ObjectId, ...] }\n// Tableau borné (max 500)",
+            "correct": true
+          },
+          {
+            "code": "// Collection séparée friends: { userId, friendId }",
+            "correct": false
+          },
+          {
+            "code": "// Embed les documents complets : users: { friends: [{...userDoc}] }",
+            "correct": false
+          },
+          {
+            "code": "// Recalculer les amis à chaque requête",
+            "correct": false
+          }
+        ],
+        "explication": "Tableau BORNÉ = embed des IDs. Tableau NON BORNÉ = référence. Embedder les documents complets crée de la duplication. Une collection séparée est utile pour les relations très complexes ou bidirectionnelles.",
+        "query": null
+      },
+      {
+        "id": "q108",
+        "enonce": "Qu'est-ce que le Subset Pattern ?",
+        "options": [
+          {
+            "code": "// Embedder un sous-ensemble des données les plus utilisées\n// Ex: les 5 derniers commentaires dans le post\n// + collection complète pour le reste",
+            "correct": true
+          },
+          {
+            "code": "// Ne stocker que certains champs d'un document",
+            "correct": false
+          },
+          {
+            "code": "// Diviser une collection en plusieurs sous-collections",
+            "correct": false
+          },
+          {
+            "code": "// Utiliser des projections pour réduire les données retournées",
+            "correct": false
+          }
+        ],
+        "explication": "Le Subset Pattern stocke un sous-ensemble fréquemment accédé dans le document principal (lecture rapide) ET conserve la collection complète pour les accès complets. Idéal pour les données de preview.",
+        "query": null
+      },
+      {
+        "id": "q109",
+        "enonce": "Qu'est-ce que le Bucket Pattern ?",
+        "options": [
+          {
+            "code": "// Regrouper des données chronologiques dans des 'buckets'\n// Ex: { month: '2024-01', readings: [{...}, ...] }\n// Réduit le nombre de documents",
+            "correct": true
+          },
+          {
+            "code": "// Utiliser $bucket dans le pipeline d'agrégation",
+            "correct": false
+          },
+          {
+            "code": "// Stocker les données dans des fichiers séparés",
+            "correct": false
+          },
+          {
+            "code": "// Partitionner une collection par plages de valeurs",
+            "correct": false
+          }
+        ],
+        "explication": "Le Bucket Pattern regroupe des données time-series dans des documents 'seau'. Au lieu de millions de documents individuels, on a des documents contenant des tableaux de mesures. Réduit le nombre de documents et améliore les performances.",
+        "query": null
+      },
+      {
+        "id": "q110",
+        "enonce": "Quand faut-il ÉVITER d'embedder des données dans un document ?",
+        "options": [
+          {
+            "code": "// Quand le tableau peut croître sans limite (unbounded)\n// Quand les données sont mises à jour fréquemment et indépendamment\n// Quand la limite 16MB risque d'être atteinte",
+            "correct": true
+          },
+          {
+            "code": "// Toujours — les références sont toujours meilleures",
+            "correct": false
+          },
+          {
+            "code": "// Quand les données sont rarement lues ensemble",
+            "correct": false
+          },
+          {
+            "code": "// Jamais — l'embed est toujours plus rapide",
+            "correct": false
+          }
+        ],
+        "explication": "L'embed est bon pour les données lues ensemble, avec une taille bornée et peu de mises à jour indépendantes. La référence est meilleure pour les relations non bornées, les données souvent mises à jour séparément, ou les données partagées entre plusieurs documents.",
+        "query": null
+      }
+    ]
+  },
+  {
+    "_id": "69ca471868a02a818a3ca51d",
+    "id": "aggregation-avancee",
+    "titre": "Agrégation avancée",
+    "icon": "🔬",
+    "niveau": "expert",
+    "desc": "$bucket, $facet, $graphLookup, $merge",
+    "questions": [
+      {
+        "id": "q111",
+        "enonce": "Répartis les utilisateurs en tranches d'âge : 0-18, 18-30, 30-50, 50+.",
+        "options": [
+          {
+            "code": "db.users.aggregate([{ $bucket: { groupBy:\"$age\", boundaries:[0,18,30,50], default:\"50+\", output:{ count:{ $sum:1 } } } }])",
+            "correct": true
+          },
+          {
+            "code": "db.users.aggregate([{ $group: { _id: { $range:[\"$age\",0,50,10] }, count:{ $sum:1 } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $group: { _id: { $floor: { $divide:[\"$age\",10] } }, count:{ $sum:1 } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.users.aggregate([{ $bucketAuto: { groupBy:\"$age\", buckets:4 } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$bucket définit des tranches manuelles. default capture les valeurs hors bornes. $bucketAuto crée des tranches automatiques sans contrôle des frontières.",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$bucket": {
+                  "groupBy": "$age",
+                  "boundaries": [
+                    0,
+                    18,
+                    30,
+                    50
+                  ],
+                  "default": "50+",
+                  "output": {
+                    "count": {
+                      "$sum": 1
+                    }
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q112",
+        "enonce": "Calcule en une requête le nombre total d'orders ET la répartition par statut.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $facet: { total:[{ $count:\"count\" }], parStatut:[{ $group:{ _id:\"$status\", n:{ $sum:1 } } }] } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $count:\"total\" }, { $group:{ _id:\"$status\", n:{ $sum:1 } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.countDocuments()\ndb.orders.aggregate([{ $group:{ _id:\"$status\", n:{ $sum:1 } } }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:null, total:{ $sum:1 }, statuts:{ $push:\"$status\" } } }])",
+            "correct": false
+          }
+        ],
+        "explication": "$facet exécute plusieurs sous-pipelines en parallèle sur les mêmes données. Plus efficace que deux requêtes séparées.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$facet": {
+                  "total": [
+                    {
+                      "$count": "count"
+                    }
+                  ],
+                  "parStatut": [
+                    {
+                      "$group": {
+                        "_id": "$status",
+                        "n": {
+                          "$sum": 1
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q113",
+        "enonce": "Qu'est-ce que $bucketAuto et quand l'utiliser ?",
+        "options": [
+          {
+            "code": "// Crée N buckets de taille approximativement égale\n// Utile quand on ne connaît pas les frontières à l'avance",
+            "correct": true
+          },
+          {
+            "code": "// Identique à $bucket mais plus rapide",
+            "correct": false
+          },
+          {
+            "code": "// Crée des buckets basés sur les valeurs distinctes",
+            "correct": false
+          },
+          {
+            "code": "// Remplace $group pour les données numériques",
+            "correct": false
+          }
+        ],
+        "explication": "$bucketAuto détermine automatiquement les frontières pour créer N buckets équilibrés. Idéal pour l'exploration de données. $bucket est préférable quand on veut des frontières précises (ex: tranches d'âge métier).",
+        "query": {
+          "collection": "users",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$bucketAuto": {
+                  "groupBy": "$score",
+                  "buckets": 4
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q114",
+        "enonce": "Utilise $merge pour mettre à jour une collection 'monthly_stats' avec les résultats d'une agrégation.",
+        "options": [
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:{ $month:\"$createdAt\" }, total:{ $sum:\"$total\" } } }, { $merge:{ into:\"monthly_stats\", whenMatched:\"merge\", whenNotMatched:\"insert\" } }])",
+            "correct": true
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:{ $month:\"$createdAt\" }, total:{ $sum:\"$total\" } } }, { $out:\"monthly_stats\" }])",
+            "correct": false
+          },
+          {
+            "code": "db.orders.aggregate([{ $group:{ _id:{ $month:\"$createdAt\" }, total:{ $sum:\"$total\" } } }]).save(\"monthly_stats\")",
+            "correct": false
+          },
+          {
+            "code": "db.monthly_stats.insertMany(db.orders.aggregate([...]))",
+            "correct": false
+          }
+        ],
+        "explication": "$merge est plus flexible que $out — il peut fusionner avec une collection existante. whenMatched:'merge' met à jour les documents existants. $out remplace tout. save() n'existe pas sur un curseur.",
+        "query": {
+          "collection": "orders",
+          "operation": "aggregate",
+          "args": [
+            [
+              {
+                "$group": {
+                  "_id": null,
+                  "count": {
+                    "$sum": 1
+                  },
+                  "totalRevenue": {
+                    "$sum": "$total"
+                  }
+                }
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "q115",
+        "enonce": "Utilise $graphLookup pour trouver tous les ancêtres d'une catégorie dans une hiérarchie.",
+        "options": [
+          {
+            "code": "db.categories.aggregate([{ $match:{ name:\"Smartphones\" } }, { $graphLookup:{ from:\"categories\", startWith:\"$parentId\", connectFromField:\"parentId\", connectToField:\"_id\", as:\"ancestors\" } }])",
+            "correct": true
+          },
+          {
+            "code": "db.categories.aggregate([{ $match:{ name:\"Smartphones\" } }, { $lookup:{ from:\"categories\", localField:\"parentId\", foreignField:\"_id\", as:\"ancestors\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.categories.aggregate([{ $treeSearch:{ root:\"Smartphones\", field:\"parentId\" } }])",
+            "correct": false
+          },
+          {
+            "code": "db.categories.find({ name:\"Smartphones\" }).populate(\"parentId\").recursive()",
+            "correct": false
+          }
+        ],
+        "explication": "$graphLookup parcourt récursivement des relations. startWith = valeur de départ, connectFromField = champ de liaison local, connectToField = champ cible. $lookup ne fait qu'un seul niveau. $treeSearch et recursive() n'existent pas.",
+        "query": null
+      }
+    ]
+  }
+]

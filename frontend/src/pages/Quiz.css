@@ -1,0 +1,255 @@
+.quiz {
+  min-height: 100vh;
+  background: #f7f6f2;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Sora', sans-serif;
+}
+
+/* ── Header ── */
+.quiz-header {
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.btn-back:hover { color: #333; }
+
+.progress-wrap {
+  flex: 1;
+  height: 8px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3b9c52;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.quiz-hearts {
+  display: flex;
+  gap: 3px;
+}
+
+.heart {
+  font-size: 1rem;
+  transition: opacity 0.3s;
+}
+
+.heart.lost { opacity: 0.2; }
+
+.quiz-xp {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ff7b29;
+  white-space: nowrap;
+}
+
+/* ── Corps ── */
+.quiz-body {
+  padding: 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.q-number {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #aaa;
+  margin-bottom: 0.5rem;
+}
+
+.q-enonce {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+  color: #1a1a1a;
+}
+
+/* ── Options ── */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+}
+
+.option {
+  background: #fff;
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.option:hover:not(:disabled) {
+  border-color: #2d8cff;
+  background: #e0eeff;
+}
+
+.option.selected {
+  border-color: #2d8cff;
+  background: #e0eeff;
+}
+
+.option.correct {
+  border-color: #3b9c52;
+  background: #d6f5dc;
+}
+
+.option.wrong {
+  border-color: #e83a3a;
+  background: #ffeaea;
+}
+
+.option:disabled { cursor: default; }
+
+.option-letter {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  border: 1.5px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #666;
+}
+
+.option.correct .option-letter {
+  background: #3b9c52;
+  border-color: #1a5e25;
+  color: #fff;
+}
+
+.option.wrong .option-letter {
+  background: #e83a3a;
+  border-color: #8a0000;
+  color: #fff;
+}
+
+.option-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: inherit;
+}
+
+/* ── Feedback ── */
+.feedback {
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.feedback-correct {
+  background: #d6f5dc;
+  border: 1.5px solid #3b9c52;
+}
+
+.feedback-wrong {
+  background: #ffeaea;
+  border: 1.5px solid #e83a3a;
+}
+
+.feedback-titre {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.feedback-correct .feedback-titre { color: #1a5e25; }
+.feedback-wrong   .feedback-titre { color: #7a0000; }
+
+.feedback-explication {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: #333;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Résultat MongoDB ── */
+.exec-result {
+  background: #0d2018;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.exec-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #4a9060;
+  margin-bottom: 4px;
+}
+
+.exec-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  color: #a8ffca;
+  line-height: 1.8;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ── Bouton continuer ── */
+.btn-continue {
+  width: 100%;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 0.5rem;
+}
+
+.btn-correct {
+  background: #3b9c52;
+  color: #fff;
+}
+
+.btn-wrong {
+  background: #e83a3a;
+  color: #fff;
+}
+
+.btn-continue:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}

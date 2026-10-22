@@ -1,0 +1,60 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "title": "Order",
+    "description": "Commande passée par un acheteur",
+    "required": ["buyerId", "items", "total", "status", "createdAt"],
+    "properties": {
+      "_id": {
+        "bsonType": "objectId"
+      },
+      "buyerId": {
+        "bsonType": "objectId",
+        "description": "Référence vers users._id — acheteur"
+      },
+      "items": {
+        "bsonType": "array",
+        "minItems": 1,
+        "description": "Lignes de commande — au moins un article obligatoire",
+        "items": {
+          "bsonType": "object",
+          "required": ["productId", "qty", "unitPrice"],
+          "properties": {
+            "productId": {
+              "bsonType": "objectId",
+              "description": "Référence vers products._id"
+            },
+            "qty": {
+              "bsonType": "int",
+              "minimum": 1,
+              "description": "Quantité commandée — minimum 1"
+            },
+            "unitPrice": {
+              "bsonType": ["double", "int", "long"],
+              "minimum": 0,
+              "description": "Prix unitaire au moment de la commande"
+            }
+          }
+        }
+      },
+      "total": {
+        "bsonType": ["double", "int", "long"],
+        "minimum": 0,
+        "description": "Total calculé de la commande"
+      },
+      "status": {
+        "bsonType": "string",
+        "enum": ["pending", "shipped", "delivered", "cancelled"],
+        "description": "Statut — valeurs strictement limitées"
+      },
+      "createdAt": {
+        "bsonType": "date",
+        "description": "Date de passage de la commande"
+      },
+      "shippedAt": {
+        "bsonType": ["date", "null"],
+        "description": "Date d'expédition — null si pas encore expédié"
+      }
+    }
+  }
+}
